@@ -9,7 +9,7 @@ import com.twilio.twiml.voice.Play
 import org.apache.logging.log4j.LogManager
 
 
-class Handler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
+class CallHandler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
         return ApiGatewayResponse.build {
             rawBody = getResponse().toXml()
@@ -33,6 +33,6 @@ class Handler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     }
 
     companion object {
-        private val LOG = LogManager.getLogger(Handler::class.java)
+        private val LOG = LogManager.getLogger(CallHandler::class.java)
     }
 }

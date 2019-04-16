@@ -11,12 +11,14 @@ package:
 
 functions:
   call-handler:
-    handler: com.merricklabs.autobuzzer.Handler
+    handler: com.merricklabs.autobuzzer.CallHandler
     events:
       - http:
-          path: call-responses
+          path: call
           method: post
-          response:
-            headers:
-              Content-Type: "application/xml"
-            template: $input.path('$')
+  sms-handler:
+    handler: com.merricklabs.autobuzzer.SmsHandler
+    events:
+      - http:
+          path: sms
+          method: post

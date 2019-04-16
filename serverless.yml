@@ -5,6 +5,7 @@ provider:
   runtime: java8
   stage: dev
   region: us-west-2
+  memorySize: 512
 
 package:
   artifact: build/libs/autobuzzer-dev.jar

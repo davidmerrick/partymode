@@ -3,22 +3,33 @@ package com.merricklabs.autobuzzer
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import com.twilio.twiml.VoiceResponse
-import com.twilio.twiml.voice.Say
+import com.twilio.twiml.voice.Dial
+import com.twilio.twiml.voice.Number
+import com.twilio.twiml.voice.Play
 import org.apache.logging.log4j.LogManager
 
 
 class Handler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
-        val say = Say.Builder(
-                "Hello from your pals at Twilio! Have fun.")
-                .build()
-        val voiceResponse = VoiceResponse.Builder()
-                .say(say)
-                .build()
         return ApiGatewayResponse.build {
-            rawBody = voiceResponse.toXml()
+            rawBody = getResponse().toXml()
             headers = mapOf("Content-Type" to "application/xml")
         }
+    }
+
+    private fun getResponse(): VoiceResponse {
+        val shouldBuzz = System.getenv("SHOULD_BUZZ") != null && System.getenv("SHOULD_BUZZ") as Boolean
+        if (shouldBuzz) {
+            LOG.info("Buzzing someone in.")
+            return VoiceResponse.Builder()
+                    .play(Play.Builder().digits("ww999").build()) // Todo: these DTMF tones are pretty short. Might want to use an mp3
+                    .build()
+        }
+
+        val myNumber = Number.Builder(System.getenv("MY_NUMBER")).build()
+        return VoiceResponse.Builder()
+                .dial(Dial.Builder().number(myNumber).build())
+                .build()
     }
 
     companion object {

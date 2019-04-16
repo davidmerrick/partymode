@@ -16,3 +16,7 @@ functions:
       - http:
           path: call-responses
           method: post
+          response:
+            headers:
+              Content-Type: "application/xml"
+            template: $input.path('$')

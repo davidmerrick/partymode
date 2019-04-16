@@ -1,6 +1,6 @@
 # autobuzzer
 
-Service that auto-buzzes people into my building when enabled, otherwise forwards to my phone. Uses [Twilio](https://www.twilio.com/).
+Service that auto-buzzes people into my building when enabled, otherwise forwards to my phone. Uses [Twilio](https://www.twilio.com/). Written in Kotlin as an AWS Lambda function.
 
 # Usage
 

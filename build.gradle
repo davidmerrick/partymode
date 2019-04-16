@@ -1,27 +1,40 @@
+group = 'com.merricklabs.autobuzzer'
+version = 'dev'
+
 buildscript {
     ext.kotlin_version = '1.3.30'
     repositories {
         mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+        jcenter()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "de.sebastianboegl.gradle.plugins:shadow-log4j-transformer:2.1.1"
+        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.1"
     }
 }
 
-plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.3.30'
-}
-
-group = 'com.merricklabs.autobuzzer'
 apply plugin: 'kotlin'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: "de.sebastianboegl.shadow.transformer.log4j"
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
     implementation group: "com.twilio.sdk", name: "twilio", version: "7.17.0"
     implementation group: "org.jetbrains.kotlin", name: "kotlin-stdlib-jdk8"
+    
+    implementation group: 'com.amazonaws', name: 'aws-lambda-java-core', version:'1.1.0'
+    implementation group: 'com.amazonaws', name: 'aws-lambda-java-log4j2', version:'1.0.0'
+    implementation group: 'com.amazonaws', name: 'aws-lambda-java-events', version:'2.0.1'
+    
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version:'2.8.5'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version:'2.8.5'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version:'2.8.5'
 }
 
 compileKotlin {
@@ -34,4 +47,20 @@ compileTestKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+}
+
+task buildZip(type: Zip) {
+    from compileJava
+    from compileKotlin
+    from processResources
+    into('lib') {
+        from configurations.compileClasspath
+    }
+}
+
+build.dependsOn buildZip
+
+
+task deploy(type: Exec, dependsOn: 'shadowJar') {
+    commandLine 'serverless', 'deploy'
 }

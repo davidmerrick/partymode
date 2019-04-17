@@ -10,6 +10,7 @@ import com.twilio.twiml.MessagingResponse
 import com.twilio.twiml.messaging.Body
 import com.twilio.twiml.messaging.Message
 import org.apache.logging.log4j.LogManager
+import java.time.Instant
 
 class SmsHandler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
@@ -29,7 +30,7 @@ class SmsHandler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
             val numHours = twilioInput.getValue("Body")[0].toInt()
             saveTimeToDb(numHours)
             val message = Message.Builder()
-                    .body(Body.Builder("Enabling autobuzz for $numHours hours").build())
+                    .body(Body.Builder("Enabling partymode for $numHours hours").build())
                     .to(twilioInput.getValue("From")[0])
                     .build()
             val response = MessagingResponse.Builder().message(message).build()
@@ -40,7 +41,7 @@ class SmsHandler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
             }
         } catch (e: Exception) {
             val message = Message.Builder()
-                    .body(Body.Builder("Error: ${e.message}. Please specify the number of hours to enable autobuzz for.").build())
+                    .body(Body.Builder("Please specify the number of hours to enable autobuzz for.").build())
                     .to(twilioInput.getValue("From")[0])
                     .build()
             val response = MessagingResponse.Builder().message(message).build()
@@ -63,7 +64,12 @@ class SmsHandler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
         val client = AmazonDynamoDBClientBuilder.standard()
                 .withEndpointConfiguration(AwsClientBuilder.EndpointConfiguration(endpoint, region))
                 .build()
-        client.putItem(System.getenv("DYNAMODB_TABLE_NAME"), mapOf("date" to AttributeValue(numHours.toString())))
+        client.putItem(System.getenv("DYNAMODB_TABLE_NAME"),
+                mapOf(
+                        "date" to AttributeValue(Instant.now().toString()),
+                        "timeout" to AttributeValue(numHours.toString())
+                )
+        )
     }
 
     companion object {

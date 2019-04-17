@@ -11,6 +11,12 @@ provider:
   region: us-west-2
   memorySize: 512
   timeout: 10
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+      Resource: arn:aws:dynamodb:*:*:table/${self:custom.tableName}
 
 package:
   artifact: build/libs/partymode-dev.jar

@@ -27,6 +27,8 @@ repositories {
 dependencies {
     implementation group: "com.twilio.sdk", name: "twilio", version: "7.17.0"
     implementation group: "org.jetbrains.kotlin", name: "kotlin-stdlib-jdk8"
+    implementation group: "ch.qos.logback", name: "logback-classic", version: "1.2.2"
+    implementation group: "ch.qos.logback", name: "logback-core", version: "1.2.3"
 
     implementation group: 'com.amazonaws', name: 'aws-lambda-java-core', version: '1.1.0'
     implementation group: 'com.amazonaws', name: 'aws-lambda-java-log4j2', version: '1.0.0'

@@ -1,7 +1,7 @@
-service: autobuzzer
+service: partymode
 
 custom:
-  tableName: autobuzz
+  tableName: partymode
   dynamoEndpoint: https://dynamodb.us-west-2.amazonaws.com
 
 provider:
@@ -13,11 +13,11 @@ provider:
   timeout: 10
 
 package:
-  artifact: build/libs/autobuzzer-dev.jar
+  artifact: build/libs/partymode-dev.jar
 
 functions:
   call-handler:
-    handler: com.merricklabs.autobuzzer.CallHandler
+    handler: com.merricklabs.partymode.CallHandler
     environment:
       DYNAMODB_ENDPOINT: ${self:custom.dynamoEndpoint}
       DYNAMODB_TABLE_NAME: ${self:custom.tableName}
@@ -26,7 +26,7 @@ functions:
           path: call
           method: post
   sms-handler:
-    handler: com.merricklabs.autobuzzer.SmsHandler
+    handler: com.merricklabs.partymode.SmsHandler
     environment:
       DYNAMODB_ENDPOINT: ${self:custom.dynamoEndpoint}
       DYNAMODB_TABLE_NAME: ${self:custom.tableName}

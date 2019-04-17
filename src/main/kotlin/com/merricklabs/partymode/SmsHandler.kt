@@ -1,11 +1,11 @@
-package com.merricklabs.autobuzzer
+package com.merricklabs.partymode
 
 import com.amazonaws.client.builder.AwsClientBuilder
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
-import com.merricklabs.autobuzzer.twilio.TwilioUtil
+import com.merricklabs.partymode.twilio.TwilioUtil
 import com.twilio.twiml.MessagingResponse
 import com.twilio.twiml.messaging.Body
 import com.twilio.twiml.messaging.Message

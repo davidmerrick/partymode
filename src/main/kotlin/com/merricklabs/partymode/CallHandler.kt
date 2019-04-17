@@ -1,4 +1,4 @@
-package com.merricklabs.autobuzzer
+package com.merricklabs.partymode
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler

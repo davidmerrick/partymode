@@ -1,4 +1,4 @@
-package com.merricklabs.autobuzzer.twilio
+package com.merricklabs.partymode.twilio
 
 import org.testng.Assert
 import org.testng.annotations.Test

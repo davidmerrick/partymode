@@ -1,4 +1,4 @@
-group = 'com.merricklabs.autobuzzer'
+group = 'com.merricklabs.partymode'
 version = 'dev'
 
 buildscript {

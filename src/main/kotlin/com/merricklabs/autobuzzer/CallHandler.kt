@@ -18,7 +18,7 @@ class CallHandler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     }
 
     private fun getResponse(): VoiceResponse {
-        val shouldBuzz = System.getenv("SHOULD_BUZZ") != null && System.getenv("SHOULD_BUZZ") as Boolean
+        val shouldBuzz = System.getenv("SHOULD_BUZZ") != null && System.getenv("SHOULD_BUZZ").toBoolean()
         if (shouldBuzz) {
             LOG.info("Buzzing someone in.")
             return VoiceResponse.Builder()

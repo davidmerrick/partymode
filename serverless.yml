@@ -1,11 +1,16 @@
 service: autobuzzer
 
+custom:
+  tableName: autobuzz
+  dynamoEndpoint: https://dynamodb.us-west-2.amazonaws.com
+
 provider:
   name: aws
   runtime: java8
   stage: dev
   region: us-west-2
   memorySize: 512
+  timeout: 10
 
 package:
   artifact: build/libs/autobuzzer-dev.jar
@@ -13,13 +18,36 @@ package:
 functions:
   call-handler:
     handler: com.merricklabs.autobuzzer.CallHandler
+    environment:
+      DYNAMODB_ENDPOINT: ${self:custom.dynamoEndpoint}
+      DYNAMODB_TABLE_NAME: ${self:custom.tableName}
     events:
       - http:
           path: call
           method: post
   sms-handler:
     handler: com.merricklabs.autobuzzer.SmsHandler
+    environment:
+      DYNAMODB_ENDPOINT: ${self:custom.dynamoEndpoint}
+      DYNAMODB_TABLE_NAME: ${self:custom.tableName}
     events:
       - http:
           path: sms
           method: post
+
+resources:
+  Resources:
+    RidesDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: date
+            AttributeType: S
+        KeySchema:
+          - AttributeName: date
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.tableName}

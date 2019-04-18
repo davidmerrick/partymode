@@ -2,35 +2,18 @@ package com.merricklabs.partymode.handlers
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
+import com.merricklabs.partymode.PartymodeModule
 import com.merricklabs.partymode.models.ApiGatewayResponse
-import com.twilio.twiml.VoiceResponse
-import com.twilio.twiml.voice.Dial
-import com.twilio.twiml.voice.Number
-import com.twilio.twiml.voice.Play
-import mu.KotlinLogging
-
-private val log = KotlinLogging.logger {}
+import org.koin.standalone.StandAloneContext
 
 class CallHandler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
-    override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
-        return ApiGatewayResponse.build {
-            rawBody = getResponse().toXml()
-            headers = mapOf("Content-Type" to "application/xml")
-        }
+    var callHandlerImpl: CallHandlerImpl? = null
+
+    init {
+        StandAloneContext.startKoin(listOf(PartymodeModule))
     }
 
-    private fun getResponse(): VoiceResponse {
-        val shouldBuzz = System.getenv("SHOULD_BUZZ") != null && System.getenv("SHOULD_BUZZ").toBoolean()
-        if (shouldBuzz) {
-            log.info("Buzzing someone in.")
-            return VoiceResponse.Builder()
-                    .play(Play.Builder().digits("ww999").build()) // Todo: these DTMF tones are pretty short. Might want to use an mp3
-                    .build()
-        }
-
-        val myNumber = Number.Builder(System.getenv("MY_NUMBER")).build()
-        return VoiceResponse.Builder()
-                .dial(Dial.Builder().number(myNumber).build())
-                .build()
+    override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
+        return callHandlerImpl!!.handleRequest(input, context)
     }
 }

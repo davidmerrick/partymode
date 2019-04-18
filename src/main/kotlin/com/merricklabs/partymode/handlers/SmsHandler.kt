@@ -7,7 +7,7 @@ import com.merricklabs.partymode.models.ApiGatewayResponse
 import org.koin.standalone.StandAloneContext.startKoin
 
 class SmsHandler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
-    var smsHandlerImpl: SmsHandlerImpl? = null
+    private val smsHandlerImpl: SmsHandlerImpl
 
     init {
         startKoin(listOf(PartymodeModule))
@@ -15,6 +15,6 @@ class SmsHandler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     }
 
     override fun handleRequest(input: Map<String, Any>, context: Context?): ApiGatewayResponse {
-        return smsHandlerImpl!!.handleRequest(input, context)
+        return smsHandlerImpl.handleRequest(input, context)
     }
 }

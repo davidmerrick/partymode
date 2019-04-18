@@ -4,6 +4,7 @@ import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import com.merricklabs.partymode.models.ApiGatewayResponse
 import com.merricklabs.partymode.storage.PartymodeStorage
+import com.merricklabs.partymode.util.PartymodeUtil
 import com.twilio.twiml.VoiceResponse
 import com.twilio.twiml.voice.Dial
 import com.twilio.twiml.voice.Number
@@ -25,7 +26,9 @@ class CallHandlerImpl : RequestHandler<Map<String, Any>, ApiGatewayResponse>, Ko
     }
 
     private fun getResponse(): VoiceResponse {
-        val shouldBuzz = System.getenv("SHOULD_BUZZ") != null && System.getenv("SHOULD_BUZZ").toBoolean()
+        val item = storage.getLatestItem()
+        log.info("Got item: $item")
+        val shouldBuzz = PartymodeUtil.shouldBuzz(item.date, item.timeoutHours)
         if (shouldBuzz) {
             log.info("Buzzing someone in.")
             return VoiceResponse.Builder()

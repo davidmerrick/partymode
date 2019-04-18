@@ -1,11 +1,14 @@
 package com.merricklabs.partymode.storage
 
 import com.amazonaws.client.builder.AwsClientBuilder
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.amazonaws.services.dynamodbv2.document.DynamoDB
 import com.amazonaws.services.dynamodbv2.document.Table
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
+import com.amazonaws.services.dynamodbv2.model.ScanRequest
 import com.merricklabs.partymode.PartymodeConfig
+import com.merricklabs.partymode.models.TableItem
 import mu.KotlinLogging
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -18,12 +21,13 @@ class PartymodeStorage : KoinComponent {
 
     private val dynamoDbConfig: PartymodeConfig.DynamoDb
     private val table: Table
+    private val client: AmazonDynamoDB
 
     init {
         this.dynamoDbConfig = config.dynamoDb
 
         val dynamoDbConfig = config.dynamoDb
-        val client = AmazonDynamoDBClientBuilder.standard()
+        client = AmazonDynamoDBClientBuilder.standard()
                 .withEndpointConfiguration(
                         AwsClientBuilder.EndpointConfiguration(dynamoDbConfig.endpoint, dynamoDbConfig.region)
                 )
@@ -35,16 +39,26 @@ class PartymodeStorage : KoinComponent {
 
     fun saveTimeToDb(numHours: Int) {
         log.info("Saving $numHours to db")
-        val endpoint = System.getenv("DYNAMODB_ENDPOINT") ?: "https://dynamodb.us-west-2.amazonaws.com"
-        val region = System.getenv("DYNAMODB_REGION") ?: "us-west-2"
+        val endpoint = dynamoDbConfig.endpoint
+        val region = dynamoDbConfig.region
         val client = AmazonDynamoDBClientBuilder.standard()
                 .withEndpointConfiguration(AwsClientBuilder.EndpointConfiguration(endpoint, region))
                 .build()
-        client.putItem(System.getenv("DYNAMODB_TABLE_NAME"),
+        client.putItem(dynamoDbConfig.tableName,
                 mapOf(
                         "date" to AttributeValue(Instant.now().toString()),
                         "timeout" to AttributeValue(numHours.toString())
                 )
         )
+    }
+
+    fun getLatestItem(): TableItem {
+        val scanRequest = ScanRequest()
+                .withTableName(dynamoDbConfig.tableName)
+                .withLimit(1)
+        val result = client.scan(scanRequest).items[0]
+        val item = result.entries.first()
+        log.info("Got item $item")
+        return TableItem(item.key as String, item.value.toString() as Int)
     }
 }

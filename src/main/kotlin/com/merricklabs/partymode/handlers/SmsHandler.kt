@@ -11,6 +11,7 @@ class SmsHandler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
 
     init {
         startKoin(listOf(PartymodeModule))
+        smsHandlerImpl = SmsHandlerImpl()
     }
 
     override fun handleRequest(input: Map<String, Any>, context: Context?): ApiGatewayResponse {

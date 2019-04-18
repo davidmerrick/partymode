@@ -2,7 +2,6 @@ package com.merricklabs.partymode.handlers
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
-import com.merricklabs.partymode.PartymodeConfig
 import com.merricklabs.partymode.models.ApiGatewayResponse
 import com.merricklabs.partymode.storage.PartymodeStorage
 import com.twilio.twiml.VoiceResponse
@@ -17,7 +16,6 @@ private val log = KotlinLogging.logger {}
 
 class CallHandlerImpl : RequestHandler<Map<String, Any>, ApiGatewayResponse>, KoinComponent {
     private val storage: PartymodeStorage by inject()
-    private val config: PartymodeConfig by inject()
 
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
         return ApiGatewayResponse.build {

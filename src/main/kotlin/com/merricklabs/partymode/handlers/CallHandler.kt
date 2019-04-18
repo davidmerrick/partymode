@@ -11,6 +11,7 @@ class CallHandler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
 
     init {
         StandAloneContext.startKoin(listOf(PartymodeModule))
+        callHandlerImpl = CallHandlerImpl()
     }
 
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {

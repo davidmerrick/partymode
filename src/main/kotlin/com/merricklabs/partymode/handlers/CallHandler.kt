@@ -1,13 +1,15 @@
-package com.merricklabs.partymode
+package com.merricklabs.partymode.handlers
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
+import com.merricklabs.partymode.models.ApiGatewayResponse
 import com.twilio.twiml.VoiceResponse
 import com.twilio.twiml.voice.Dial
 import com.twilio.twiml.voice.Number
 import com.twilio.twiml.voice.Play
-import org.apache.logging.log4j.LogManager
+import mu.KotlinLogging
 
+private val log = KotlinLogging.logger {}
 
 class CallHandler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
@@ -20,7 +22,7 @@ class CallHandler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     private fun getResponse(): VoiceResponse {
         val shouldBuzz = System.getenv("SHOULD_BUZZ") != null && System.getenv("SHOULD_BUZZ").toBoolean()
         if (shouldBuzz) {
-            LOG.info("Buzzing someone in.")
+            log.info("Buzzing someone in.")
             return VoiceResponse.Builder()
                     .play(Play.Builder().digits("ww999").build()) // Todo: these DTMF tones are pretty short. Might want to use an mp3
                     .build()
@@ -30,9 +32,5 @@ class CallHandler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
         return VoiceResponse.Builder()
                 .dial(Dial.Builder().number(myNumber).build())
                 .build()
-    }
-
-    companion object {
-        private val LOG = LogManager.getLogger(CallHandler::class.java)
     }
 }

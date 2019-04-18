@@ -23,7 +23,7 @@ package:
 
 functions:
   call-handler:
-    handler: com.merricklabs.partymode.CallHandler
+    handler: com.merricklabs.partymode.handlers.CallHandler
     environment:
       DYNAMODB_ENDPOINT: ${self:custom.dynamoEndpoint}
       DYNAMODB_TABLE_NAME: ${self:custom.tableName}
@@ -32,7 +32,7 @@ functions:
           path: call
           method: post
   sms-handler:
-    handler: com.merricklabs.partymode.SmsHandler
+    handler: com.merricklabs.partymode.handlers.SmsHandler
     environment:
       DYNAMODB_ENDPOINT: ${self:custom.dynamoEndpoint}
       DYNAMODB_TABLE_NAME: ${self:custom.tableName}

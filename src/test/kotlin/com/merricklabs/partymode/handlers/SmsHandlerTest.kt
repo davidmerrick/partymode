@@ -10,7 +10,7 @@ import org.testng.annotations.Test
 
 class SmsHandlerTest : PartymodeIntegrationTestBase() {
 
-    private val smsHandler: SmsHandler by inject()
+    private val smsHandlerImpl by inject<SmsHandlerImpl>()
 
     @Test(groups = [INTEGRATION_GROUP])
     fun `Invalid phone number should return 400`() {
@@ -22,7 +22,7 @@ class SmsHandlerTest : PartymodeIntegrationTestBase() {
                 "body" to "Body=foo&subject=bar&From=%2B$badNumber"
         )
 
-        val response = smsHandler.handleRequest(input, null)
+        val response = smsHandlerImpl.handleRequest(input, null)
         assertEquals(response.statusCode, 400)
     }
 }

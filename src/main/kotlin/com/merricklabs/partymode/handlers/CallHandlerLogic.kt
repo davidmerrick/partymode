@@ -2,6 +2,7 @@ package com.merricklabs.partymode.handlers
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
+import com.merricklabs.partymode.PartymodeConfig
 import com.merricklabs.partymode.models.ApiGatewayResponse
 import com.merricklabs.partymode.storage.PartymodeStorage
 import com.merricklabs.partymode.util.PartymodeUtil
@@ -18,6 +19,7 @@ private val log = KotlinLogging.logger {}
 
 class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, KoinComponent {
     private val storage: PartymodeStorage by inject()
+    private val config: PartymodeConfig by inject()
 
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
         return ApiGatewayResponse.build {
@@ -37,9 +39,9 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
                     .build()
         }
 
-        val myNumber = Number.Builder(System.getenv("MY_NUMBER")).build()
+        val number = Number.Builder(config.phone.myNumber).build()
         return VoiceResponse.Builder()
-                .dial(Dial.Builder().number(myNumber).build())
+                .dial(Dial.Builder().number(number).build())
                 .build()
     }
 }

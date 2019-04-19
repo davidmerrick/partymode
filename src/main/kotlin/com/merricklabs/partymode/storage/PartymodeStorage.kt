@@ -56,13 +56,11 @@ class PartymodeStorage : KoinComponent {
     }
 
     fun getLatestItem(): TableItem {
-        val querySpec = QuerySpec()
-                .withKeyConditionExpression("start_time < :now")
-                .withValueMap(ValueMap().withString(":now", Instant.now().toString()))
-                .withScanIndexForward(false)
-        val items = table.query(querySpec).asSequence().toList()
-        items.forEach { log.info(it.toJSONPretty()) }
+        val scanRequest = ScanRequest()
+                .withTableName(dynamoDbConfig.tableName)
+        val items = client.scan(scanRequest).items
+        items.forEach { log.info(it.toString()) }
         val item = items.first()
-        return TableItem(item.get("start_time") as String, item.get("timeout") as Int)
+        return TableItem(item["start_time"]!!.s, item["timeout"]!!.n.toInt())
     }
 }

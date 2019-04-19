@@ -29,6 +29,7 @@ functions:
     environment:
       DYNAMODB_ENDPOINT: ${self:custom.dynamoEndpoint}
       DYNAMODB_TABLE_NAME: ${self:custom.tableName}
+      MY_NUMBER: ${env:MY_NUMBER}
     events:
       - http:
           path: call

@@ -17,6 +17,7 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:Scan
+        - dynamodb:Query
       Resource: arn:aws:dynamodb:*:*:table/${self:custom.tableName}
 
 package:
@@ -37,6 +38,7 @@ functions:
     environment:
       DYNAMODB_ENDPOINT: ${self:custom.dynamoEndpoint}
       DYNAMODB_TABLE_NAME: ${self:custom.tableName}
+      MY_NUMBER: ${env:MY_NUMBER}
     events:
       - http:
           path: sms
@@ -49,10 +51,10 @@ resources:
       DeletionPolicy: Retain
       Properties:
         AttributeDefinitions:
-          - AttributeName: date
+          - AttributeName: start_time
             AttributeType: S
         KeySchema:
-          - AttributeName: date
+          - AttributeName: start_time
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1

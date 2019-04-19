@@ -12,10 +12,11 @@ import com.twilio.twiml.voice.Play
 import mu.KotlinLogging
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
+import java.time.Instant
 
 private val log = KotlinLogging.logger {}
 
-class CallHandlerImpl : RequestHandler<Map<String, Any>, ApiGatewayResponse>, KoinComponent {
+class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, KoinComponent {
     private val storage: PartymodeStorage by inject()
 
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
@@ -28,7 +29,7 @@ class CallHandlerImpl : RequestHandler<Map<String, Any>, ApiGatewayResponse>, Ko
     private fun getResponse(): VoiceResponse {
         val item = storage.getLatestItem()
         log.info("Got item: $item")
-        val shouldBuzz = PartymodeUtil.shouldBuzz(item.date, item.timeoutHours)
+        val shouldBuzz = PartymodeUtil.shouldBuzz(Instant.parse(item.startTime), item.timeout)
         if (shouldBuzz) {
             log.info("Buzzing someone in.")
             return VoiceResponse.Builder()
@@ -42,3 +43,4 @@ class CallHandlerImpl : RequestHandler<Map<String, Any>, ApiGatewayResponse>, Ko
                 .build()
     }
 }
+

@@ -16,7 +16,7 @@ import org.koin.standalone.inject
 private val log = KotlinLogging.logger {}
 
 @Suppress("NAME_SHADOWING")
-class SmsHandlerImpl : RequestHandler<Map<String, Any>, ApiGatewayResponse>, KoinComponent {
+class SmsHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, KoinComponent {
     private val storage: PartymodeStorage by inject()
     private val config: PartymodeConfig by inject()
 

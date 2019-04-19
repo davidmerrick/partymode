@@ -5,7 +5,10 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.amazonaws.services.dynamodbv2.document.DynamoDB
 import com.amazonaws.services.dynamodbv2.document.Table
+import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec
+import com.amazonaws.services.dynamodbv2.document.utils.ValueMap
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
+import com.amazonaws.services.dynamodbv2.model.QueryRequest
 import com.amazonaws.services.dynamodbv2.model.ScanRequest
 import com.merricklabs.partymode.PartymodeConfig
 import com.merricklabs.partymode.models.TableItem
@@ -37,8 +40,8 @@ class PartymodeStorage : KoinComponent {
         this.table = dynamoDB.getTable(dynamoDbConfig.tableName)
     }
 
-    fun saveTimeToDb(numHours: Int) {
-        log.info("Saving $numHours to db")
+    fun saveTimeToDb(timeoutHours: Int) {
+        log.info("Saving $timeoutHours to db")
         val endpoint = dynamoDbConfig.endpoint
         val region = dynamoDbConfig.region
         val client = AmazonDynamoDBClientBuilder.standard()
@@ -46,19 +49,20 @@ class PartymodeStorage : KoinComponent {
                 .build()
         client.putItem(dynamoDbConfig.tableName,
                 mapOf(
-                        "date" to AttributeValue(Instant.now().toString()),
-                        "timeout" to AttributeValue(numHours.toString())
+                        "start_time" to AttributeValue(Instant.now().toString()),
+                        "timeout" to AttributeValue(timeoutHours.toString())
                 )
         )
     }
 
     fun getLatestItem(): TableItem {
-        val scanRequest = ScanRequest()
-                .withTableName(dynamoDbConfig.tableName)
-                .withLimit(1)
-        val result = client.scan(scanRequest).items[0]
-        val item = result.entries.first()
-        log.info("Got item $item")
-        return TableItem(item.key as String, item.value.toString() as Int)
+        val querySpec = QuerySpec()
+                .withKeyConditionExpression("start_time < :now")
+                .withValueMap(ValueMap().withString(":now", Instant.now().toString()))
+                .withScanIndexForward(false)
+        val items = table.query(querySpec).asSequence().toList()
+        items.forEach { log.info(it.toJSONPretty()) }
+        val item = items.first()
+        return TableItem(item.get("start_time") as String, item.get("timeout") as Int)
     }
 }

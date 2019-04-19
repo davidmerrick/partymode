@@ -7,11 +7,11 @@ import com.merricklabs.partymode.models.ApiGatewayResponse
 import org.koin.standalone.StandAloneContext
 
 class CallHandler : RequestHandler<Map<String, Any>, ApiGatewayResponse> {
-    private val callHandlerImpl: CallHandlerImpl
+    private val callHandlerImpl: CallHandlerLogic
 
     init {
         StandAloneContext.startKoin(listOf(PartymodeModule))
-        callHandlerImpl = CallHandlerImpl()
+        callHandlerImpl = CallHandlerLogic()
     }
 
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {

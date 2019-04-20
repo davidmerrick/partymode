@@ -14,6 +14,6 @@ class PartymodeConfig : KoinComponent {
     }
 
     inner class Phone {
-        val myNumber: String = System.getenv("DYNAMODB_ENDPOINT")
+        val myNumber: String = System.getenv("MY_NUMBER")
     }
 }

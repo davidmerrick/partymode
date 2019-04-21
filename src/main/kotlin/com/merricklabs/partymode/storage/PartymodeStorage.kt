@@ -5,10 +5,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.amazonaws.services.dynamodbv2.document.DynamoDB
 import com.amazonaws.services.dynamodbv2.document.Table
-import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec
-import com.amazonaws.services.dynamodbv2.document.utils.ValueMap
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
-import com.amazonaws.services.dynamodbv2.model.QueryRequest
 import com.amazonaws.services.dynamodbv2.model.ScanRequest
 import com.merricklabs.partymode.PartymodeConfig
 import com.merricklabs.partymode.models.TableItem
@@ -61,6 +58,8 @@ class PartymodeStorage : KoinComponent {
         val items = client.scan(scanRequest).items
         items.forEach { log.info(it.toString()) }
         val item = items.first()
-        return TableItem(item["start_time"]!!.s, item["timeout"]!!.n.toInt())
+        log.info("Got item: $item")
+        println("Got item: $item")
+        return TableItem(item["start_time"]!!.s, item["timeout"]!!.s.toInt())
     }
 }

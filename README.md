@@ -1,6 +1,6 @@
 # partymode 🎉
 
-Service that auto-buzzes people into my building when enabled, otherwise forwards to my phone. Uses [Twilio](https://www.twilio.com/). Written in Kotlin as an AWS Lambda function.
+Buzzing people into your apartment building when you're having a party? Ain't nobody got time for that! That's why I built partymode. It's a service that auto-buzzes people into my building when enabled, otherwise forwards calls to my phone. It uses [Twilio](https://www.twilio.com/), and is written in Kotlin for use as two AWS Lambda functions.
 
 # Installation
 

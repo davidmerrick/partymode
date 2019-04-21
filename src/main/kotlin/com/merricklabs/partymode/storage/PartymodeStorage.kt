@@ -59,7 +59,6 @@ class PartymodeStorage : KoinComponent {
         items.forEach { log.info(it.toString()) }
         val item = items.first()
         log.info("Got item: $item")
-        println("Got item: $item")
         return PartyLease(item["start_time"]!!.s, item["timeout"]!!.s.toInt())
     }
 }

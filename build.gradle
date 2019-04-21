@@ -28,6 +28,8 @@ dependencies {
     implementation(
             "com.twilio.sdk:twilio:7.17.0",
             "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
+            "org.slf4j:slf4j-api:1.7.25",
+            "org.slf4j:slf4j-jdk14:1.7.26",
             "io.github.microutils:kotlin-logging:1.6.10",
             "org.koin:koin-core:1.0.1",
 

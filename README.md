@@ -17,10 +17,6 @@ Finally, of course, have your apartment forward your call box to your Twilio num
 
 To enable partymode, text the number of hours to your Twilio number. This will enable partymode from now with a timeout of that number of hours.
 
-# Todo
-
-- Kotlin logging isn't currently working. Fix that.
-
 # Reference:
 - https://www.twilio.com/blog/2018/03/send-an-sms-message-with-kotlin-in-30-seconds.html
 - https://www.twilio.com/docs/voice/quickstart/java#respond-to-an-incoming-phone-call

@@ -8,7 +8,7 @@ import com.amazonaws.services.dynamodbv2.document.Table
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.amazonaws.services.dynamodbv2.model.ScanRequest
 import com.merricklabs.partymode.PartymodeConfig
-import com.merricklabs.partymode.models.TableItem
+import com.merricklabs.partymode.models.PartyLease
 import mu.KotlinLogging
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -52,7 +52,7 @@ class PartymodeStorage : KoinComponent {
         )
     }
 
-    fun getLatestItem(): TableItem {
+    fun getLatestItem(): PartyLease {
         val scanRequest = ScanRequest()
                 .withTableName(dynamoDbConfig.tableName)
         val items = client.scan(scanRequest).items
@@ -60,6 +60,6 @@ class PartymodeStorage : KoinComponent {
         val item = items.first()
         log.info("Got item: $item")
         println("Got item: $item")
-        return TableItem(item["start_time"]!!.s, item["timeout"]!!.s.toInt())
+        return PartyLease(item["start_time"]!!.s, item["timeout"]!!.s.toInt())
     }
 }

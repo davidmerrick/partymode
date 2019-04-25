@@ -57,9 +57,14 @@ class PartymodeStorage : KoinComponent {
                 .withTableName(dynamoDbConfig.tableName)
         val items = client.scan(scanRequest).items
         val item = items.maxBy { Instant.parse(it["start_time"]!!.s) }
-        log.info("Got item: $item")
 
-        // Todo: if no item found, have a default value
-        return PartyLease(item!!["start_time"]!!.s, item["timeout"]!!.s.toInt())
+        item?.let {
+            log.info("Got item: $item")
+            return PartyLease(item["start_time"]!!.s, item["timeout"]!!.s.toInt())
+        }
+
+        log.info("No item found. Returning default.")
+        return PartyLease(Instant.now().minusMillis(1).toString(), 0)
+
     }
 }

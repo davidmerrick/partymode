@@ -64,7 +64,6 @@ class PartymodeStorage : KoinComponent {
         }
 
         log.info("No item found. Returning default.")
-        return PartyLease(Instant.now().minusMillis(1).toString(), 0)
-
+        return PartyLease.default()
     }
 }

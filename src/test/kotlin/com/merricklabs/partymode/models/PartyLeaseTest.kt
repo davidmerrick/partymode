@@ -19,4 +19,10 @@ class PartyLeaseTest {
         val partyLease = PartyLease(Instant.now().toString(), 1)
         assertTrue(partyLease.isActive())
     }
+
+    @Test(groups = [INTEGRATION_GROUP])
+    private fun `Default lease should be inactive`() {
+        val partyLease = PartyLease.default()
+        assertFalse(partyLease.isActive())
+    }
 }

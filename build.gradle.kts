@@ -13,18 +13,16 @@ buildscript {
     }
 }
 
-plugins {
-    java
-}
-
 repositories {
     mavenCentral()
     jcenter()
 }
 
-apply(plugin = "kotlin")
-apply(plugin = "com.github.johnrengelman.shadow")
-apply(plugin = "de.sebastianboegl.shadow.transformer.log4j")
+plugins {
+    java
+    kotlin("jvm") version "1.3.31"
+    id("com.github.johnrengelman.shadow") version "4.0.4"
+}
 
 dependencies {
     implementation("com.twilio.sdk:twilio:7.17.0")

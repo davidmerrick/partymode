@@ -26,6 +26,7 @@ plugins {
 
 dependencies {
     implementation("com.twilio.sdk:twilio:7.17.0")
+    implementation("com.squareup.okhttp3:okhttp:3.14.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.slf4j:slf4j-api:1.7.25")
     implementation("org.slf4j:slf4j-jdk14:1.7.26")

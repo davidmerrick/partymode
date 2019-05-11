@@ -6,6 +6,7 @@ class PartymodeConfig : KoinComponent {
 
     val dynamoDb = DynamoDb()
     val phone = Phone()
+    val slack = Slack()
 
     inner class DynamoDb {
         val endpoint: String = System.getenv("DYNAMODB_ENDPOINT") ?: "https://dynamodb.us-west-2.amazonaws.com"
@@ -15,5 +16,9 @@ class PartymodeConfig : KoinComponent {
 
     inner class Phone {
         val myNumber: String = System.getenv("MY_NUMBER")
+    }
+
+    inner class Slack {
+        val webhookUri: String = System.getenv("SLACK_WEBHOOK_URI")
     }
 }

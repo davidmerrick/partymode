@@ -9,7 +9,8 @@ Buzzing people into your apartment building when you're having a party? Ain't no
 3. Use [Serverless](https://serverless.com/) to deploy the app with `./gradlew deploy`.
 4. This will provision a DynamoDb table, 2 Lambda functions, and 2 API Gateway endpoints.
 5. After deployment, log into the AWS console and set the `MY_NUMBER` env var in your Lambda to your phone number.
-6. Create a TwiML app and point the endpoints to the ones provisioned in AWS. Point your Twilio number to this app.
+6. Create a Slack webhook and set the `SLACK_WEBHOOK_URI` env var to that uri.
+7. Create a TwiML app and point the endpoints to the ones provisioned in AWS. Point your Twilio number to this app.
 
 Finally, of course, have your apartment forward your call box to your Twilio number 😎.
 

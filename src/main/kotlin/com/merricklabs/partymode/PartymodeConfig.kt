@@ -16,4 +16,8 @@ class PartymodeConfig : KoinComponent {
     inner class Phone {
         val myNumber: String = System.getenv("MY_NUMBER")
     }
+
+    inner class Slack {
+        val webhookUri: String = System.getenv("SLACK_WEBHOOK_URI")
+    }
 }

@@ -19,6 +19,11 @@ provider:
         - dynamodb:Scan
         - dynamodb:Query
       Resource: arn:aws:dynamodb:*:*:table/${self:custom.tableName}
+  environment:
+    DYNAMODB_ENDPOINT: ${self:custom.dynamoEndpoint}
+    DYNAMODB_TABLE_NAME: ${self:custom.tableName}
+    MY_NUMBER: ${env:MY_NUMBER}
+    SLACK_WEBHOOK_URI: ${env:SLACK_WEBHOOK_URI}
 
 package:
   artifact: build/libs/partymode-dev.jar
@@ -26,20 +31,12 @@ package:
 functions:
   call-handler:
     handler: com.merricklabs.partymode.handlers.CallHandler
-    environment:
-      DYNAMODB_ENDPOINT: ${self:custom.dynamoEndpoint}
-      DYNAMODB_TABLE_NAME: ${self:custom.tableName}
-      MY_NUMBER: ${env:MY_NUMBER}
     events:
       - http:
           path: call
           method: post
   sms-handler:
     handler: com.merricklabs.partymode.handlers.SmsHandler
-    environment:
-      DYNAMODB_ENDPOINT: ${self:custom.dynamoEndpoint}
-      DYNAMODB_TABLE_NAME: ${self:custom.tableName}
-      MY_NUMBER: ${env:MY_NUMBER}
     events:
       - http:
           path: sms

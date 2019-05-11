@@ -33,7 +33,11 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
         log.info("Got lease: $partyLease")
         if (partyLease.isActive()) {
             log.info("Buzzing someone in.")
-            slackNotifier.notify("Buzzed someone in")
+            try {
+                slackNotifier.notify("Buzzed someone in")
+            } catch (e: Exception){
+                log.error("Error posting Slack notification", e)
+            }
             return VoiceResponse.Builder()
                     .play(Play.Builder().digits("ww999").build()) // Todo: these DTMF tones are pretty short. Might want to use an mp3
                     .build()

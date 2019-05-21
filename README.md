@@ -1,6 +1,6 @@
 # partymode 🎉
 
-Buzzing people into your apartment building when you're having a party? Ain't nobody got time for that! That's why I built partymode. It's a service that auto-buzzes people into my building when enabled, otherwise forwards calls to my phone. It uses [Twilio](https://www.twilio.com/) to handle calls and SMS, backed by a pair of AWS Lambda functions written in Kotlin and deployed with the [Serverless](https://serverless.com/) Framework.
+Buzzing people into your apartment building when you're having a party? Ain't nobody got time for that! That's why I built partymode. It's a service that auto-buzzes people into my building when enabled, otherwise forwards calls to my phone. It uses [Twilio](https://www.twilio.com/) to handle calls and SMS, backed by AWS Lambda functions written in Kotlin and deployed with the [Serverless](https://serverless.com/) Framework. It integrates with Slack so I or anyone in my workspace can control when it's enabled.
 
 # Installation
 

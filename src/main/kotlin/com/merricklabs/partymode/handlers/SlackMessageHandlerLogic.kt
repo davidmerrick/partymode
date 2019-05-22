@@ -42,9 +42,10 @@ class SlackMessageHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResp
             }
             "event_callback" -> {
                 val callbackMessage = mapper.readValue(body, SlackCallbackMessage::class.java)
-                if(callbackMessage.event.isAtMention() && callbackMessage.event.text.contains("<@${config.slack.botUserName}>")){
+                // Only respond to at-mentions and ignore other bot messages
+                if(callbackMessage.event.text.contains("<@${config.slack.botUserId}>") && callbackMessage.event.bot_id == null){
                     log.info("Is an at-mention of our bot.")
-                    sendReply(callbackMessage)
+                    handleMention(callbackMessage)
                 }
                 ApiGatewayResponse(200)
             }
@@ -52,23 +53,41 @@ class SlackMessageHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResp
         }
     }
 
-    private fun sendReply(message: SlackCallbackMessage){
-        val message = SlackBotMessage(message.event.channel, message.event.text.replace("<@${config.slack.botUserName}>", "<@${message.event.user}>").trim())
+    private fun handleMention(message: SlackCallbackMessage){
+        log.info("Handling at-mention")
+        operator fun Regex.contains(text: CharSequence): Boolean = this.matches(text)
+
+        when(message.event.text){
+            in Regex(".*pm help$") -> sendReply(message, HELP_TEXT)
+            in Regex(".*pm [1-5]$") -> {
+                val regex = "[1-5]$".toRegex()
+                val numHours = regex.find(message.event.text)!!.value.toInt()
+                storage.saveTimeToDb(numHours)
+                val suffix = if(numHours > 1) "hours" else "hour"
+                sendReply(message, "partymode enabled for $numHours $suffix")
+            }
+            else -> sendReply(message, HELP_TEXT)
+        }
+    }
+
+    private fun sendReply(message: SlackCallbackMessage, text: String){
         val okHttpClient = OkHttpClient()
         val json = MediaType.get("application/json; charset=utf-8")
-        val body = RequestBody.create(json, mapper.writeValueAsString(message))
-        log.info("Sending message back to Slack: ${mapper.writeValueAsString(message)}")
+        val responseMessage = SlackBotMessage(message.event.channel, "<@${message.event.user}>: $text")
+        val body = RequestBody.create(json, mapper.writeValueAsString(responseMessage))
+        log.info("Sending message back to Slack: ${mapper.writeValueAsString(responseMessage)}")
         val request = Request.Builder()
                 .header("Authorization", "Bearer ${config.slack.botToken}")
                 .url(SLACK_URL)
                 .post(body)
                 .build()
         val response = okHttpClient.newCall(request).execute()
-        log.info("Got response from Slack API: $response")
+        log.info("Got response from Slack API: $response with body: ${response.body()!!.string()}")
     }
 
     companion object {
         const val SLACK_URL = "https://slack.com/api/chat.postMessage"
+        const val HELP_TEXT = "Usage:\npm `[1-5]`: Enable partymode for n hours"
     }
 }
 

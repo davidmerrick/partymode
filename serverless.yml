@@ -37,12 +37,6 @@ functions:
       - http:
           path: call
           method: post
-  sms-handler:
-    handler: com.merricklabs.partymode.handlers.SmsHandler
-    events:
-      - http:
-          path: sms
-          method: post
   slack-event-handlerreceive:
     handler: com.merricklabs.partymode.handlers.SlackMessageHandler
     events:

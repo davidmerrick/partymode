@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class EventPayload(
-        val client_msg_id: String,
+        val client_msg_id: String?,
         val type: String,
+        val subtype: String?,
         val text: String,
-        val user: String,
+        val user: String?,
         val ts: String,
         val channel: String,
         val event_ts: String,
-        val channel_type: String?
-){
-    fun isAtMention() = type == "app_mention"
-}
+        val channel_type: String?,
+        val bot_id: String?
+)

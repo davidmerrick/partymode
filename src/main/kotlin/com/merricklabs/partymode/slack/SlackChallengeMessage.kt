@@ -1,5 +1,8 @@
 package com.merricklabs.echobot.slack
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 class SlackChallengeMessage : SlackMessage {
     val token: String
     val challenge: String

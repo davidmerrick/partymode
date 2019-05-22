@@ -20,5 +20,7 @@ class PartymodeConfig : KoinComponent {
 
     inner class Slack {
         val webhookUri: String = System.getenv("SLACK_WEBHOOK_URI")
+        val botToken: String = System.getenv("BOT_TOKEN")
+        val botUserName: String = System.getenv("BOT_USER_NAME")
     }
 }

@@ -24,6 +24,8 @@ provider:
     DYNAMODB_TABLE_NAME: ${self:custom.tableName}
     MY_NUMBER: ${env:MY_NUMBER}
     SLACK_WEBHOOK_URI: ${env:SLACK_WEBHOOK_URI}
+    BOT_TOKEN: ${env:BOT_TOKEN}
+    BOT_USER_ID: ${env:BOT_USER_ID}
 
 package:
   artifact: build/libs/partymode-dev.jar
@@ -40,6 +42,12 @@ functions:
     events:
       - http:
           path: sms
+          method: post
+  slack-event-handlerreceive:
+    handler: com.merricklabs.partymode.handlers.SlackMessageHandler
+    events:
+      - http:
+          path: event/receive
           method: post
 
 resources:

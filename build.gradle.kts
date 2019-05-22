@@ -39,6 +39,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-core:2.8.5")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.8.5")
     implementation("com.fasterxml.jackson.core:jackson-annotations:2.8.5")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.8.5")
 
     testImplementation("org.testng:testng:6.14.3")
     testImplementation("org.koin:koin-test:1.0.1")

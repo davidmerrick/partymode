@@ -10,13 +10,7 @@ import com.merricklabs.echobot.slack.SlackChallengeMessage
 import com.merricklabs.echobot.slack.SlackMessage
 import com.merricklabs.partymode.PartymodeConfig
 import com.merricklabs.partymode.models.ApiGatewayResponse
-import com.merricklabs.partymode.slack.SlackNotifier
 import com.merricklabs.partymode.storage.PartymodeStorage
-import com.merricklabs.partymode.twilio.TwilioUtil
-import com.twilio.twiml.VoiceResponse
-import com.twilio.twiml.voice.Dial
-import com.twilio.twiml.voice.Number
-import com.twilio.twiml.voice.Play
 import mu.KotlinLogging
 import okhttp3.MediaType
 import okhttp3.OkHttpClient

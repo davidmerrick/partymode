@@ -42,15 +42,19 @@ class SlackMessageHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResp
             "event_callback" -> {
                 val callbackMessage = mapper.convertValue(input["body"], SlackCallbackMessage::class.java)
                 // Only respond to at-mentions and ignore other bot messages
-                if (callbackMessage.event.text.contains("<@${config.slack.botUserId}>") && callbackMessage.event.bot_id == null) {
+                if (isAtMention(callbackMessage)) {
                     log.info("Is an at-mention of our bot.")
                     handleMention(callbackMessage)
                 }
-                ApiGatewayResponse(200)
+                ApiGatewayResponse(200, "ok")
             }
-            else -> ApiGatewayResponse(200)
+            else -> ApiGatewayResponse(200, "ok")
         }
     }
+
+    private fun isAtMention(message: SlackCallbackMessage) = message.event.type == "app_mention"
+            && message.event.text.contains("<@${config.slack.botUserId}>")
+            && message.event.bot_id == null
 
     private fun handleMention(message: SlackCallbackMessage) {
         log.info("Handling at-mention")

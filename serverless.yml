@@ -47,12 +47,6 @@ functions:
           # returns 200 while the Lambda is still processing.
           # Otherwise Slack will retry messages which results in duplicate responses.
           async: true
-          integration: aws
-          request:
-            passThrough: NEVER
-            parameters:
-              headers:
-                'X-Amz-Invocation-Type': "'Event'"
 
 resources:
   Resources:

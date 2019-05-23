@@ -31,19 +31,18 @@ class SlackMessageHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResp
     }
 
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
-        val body = input!!["body"] as String
-        log.info("Received payload: $body")
-        val message = mapper.readValue(body, SlackMessage::class.java)
-        return when(message.type) {
+        val message = mapper.convertValue(input["body"], SlackMessage::class.java)
+        log.info("Received payload: ${mapper.writeValueAsString(message)}")
+        return when (message.type) {
             "url_verification" -> {
                 log.info("Received challenge")
-                val challengeMessage = mapper.readValue(body, SlackChallengeMessage::class.java)
+                val challengeMessage = mapper.convertValue(input["body"], SlackChallengeMessage::class.java)
                 ApiGatewayResponse(200, challengeMessage.challenge)
             }
             "event_callback" -> {
-                val callbackMessage = mapper.readValue(body, SlackCallbackMessage::class.java)
+                val callbackMessage = mapper.convertValue(input["body"], SlackCallbackMessage::class.java)
                 // Only respond to at-mentions and ignore other bot messages
-                if(callbackMessage.event.text.contains("<@${config.slack.botUserId}>") && callbackMessage.event.bot_id == null){
+                if (callbackMessage.event.text.contains("<@${config.slack.botUserId}>") && callbackMessage.event.bot_id == null) {
                     log.info("Is an at-mention of our bot.")
                     handleMention(callbackMessage)
                 }
@@ -53,24 +52,24 @@ class SlackMessageHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResp
         }
     }
 
-    private fun handleMention(message: SlackCallbackMessage){
+    private fun handleMention(message: SlackCallbackMessage) {
         log.info("Handling at-mention")
         operator fun Regex.contains(text: CharSequence): Boolean = this.matches(text)
 
-        when(message.event.text){
+        when (message.event.text) {
             in Regex(".*pm help$") -> sendReply(message, HELP_TEXT)
             in Regex(".*pm [1-5]$") -> {
                 val regex = "[1-5]$".toRegex()
                 val numHours = regex.find(message.event.text)!!.value.toInt()
                 storage.saveTimeToDb(numHours)
-                val suffix = if(numHours > 1) "hours" else "hour"
+                val suffix = if (numHours > 1) "hours" else "hour"
                 sendReply(message, "partymode enabled for $numHours $suffix")
             }
             else -> sendReply(message, HELP_TEXT)
         }
     }
 
-    private fun sendReply(message: SlackCallbackMessage, text: String){
+    private fun sendReply(message: SlackCallbackMessage, text: String) {
         val okHttpClient = OkHttpClient()
         val json = MediaType.get("application/json; charset=utf-8")
         val responseMessage = SlackBotMessage(message.event.channel, "<@${message.event.user}>: $text")

@@ -39,7 +39,7 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
                 log.error("Error posting Slack notification", e)
             }
             return VoiceResponse.Builder()
-                    .play(Play.Builder().digits("ww999").build()) // Todo: these DTMF tones are pretty short. Might want to use an mp3
+                    .play(Play.Builder().digits("ww999").build())
                     .build()
         }
 

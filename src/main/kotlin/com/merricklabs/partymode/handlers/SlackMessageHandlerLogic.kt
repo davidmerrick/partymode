@@ -32,7 +32,7 @@ class SlackMessageHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResp
 
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
         val message = mapper.convertValue(input["body"], SlackMessage::class.java)
-        log.info("Received payload: ${mapper.writeValueAsString(message)}")
+        log.info("Received payload: ${input["body"]}")
         return when (message.type) {
             "url_verification" -> {
                 log.info("Received challenge")

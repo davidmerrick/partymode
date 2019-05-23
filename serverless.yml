@@ -49,7 +49,7 @@ functions:
           async: true
           integration: aws
           request:
-            passThrough: WHEN_NO_MATCH
+            passThrough: NEVER
             parameters:
               headers:
                 'X-Amz-Invocation-Type': "'Event'"

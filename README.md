@@ -11,12 +11,9 @@ Buzzing people into your apartment building when you're having a party? Ain't no
 5. After deployment, log into the AWS console and set the `MY_NUMBER` env var in your Lambda to your phone number.
 6. Create a Slack webhook and set the `SLACK_WEBHOOK_URI` env var to that uri.
 7. Create a TwiML app and point the endpoints to the ones provisioned in AWS. Point your Twilio number to this app.
+8. Create a Slack bot and subscribe to the following bot events: `app_mention`, `message.channels`, and `message.im`.
 
 Finally, of course, have your apartment forward your call box to your Twilio number 😎.
-
-# Usage 
-
-To enable partymode, text the number of hours to your Twilio number. This will enable partymode from now with a timeout of that number of hours.
 
 # Reference:
 - https://www.twilio.com/blog/2018/03/send-an-sms-message-with-kotlin-in-30-seconds.html

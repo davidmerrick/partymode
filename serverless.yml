@@ -7,7 +7,7 @@ custom:
 provider:
   name: aws
   runtime: java8
-  stage: dev
+  stage: ${opt:stage, "dev"}
   region: us-west-2
   memorySize: 512
   timeout: 20
@@ -25,7 +25,7 @@ provider:
     MY_NUMBER: ${env:MY_NUMBER}
     SLACK_WEBHOOK_URI: ${env:SLACK_WEBHOOK_URI}
     BOT_TOKEN: ${env:BOT_TOKEN}
-    BOT_USER_ID: ${env:BOT_USER_ID}
+    BOT_NAME: ${env:BOT_NAME}
 
 package:
   artifact: build/libs/partymode-dev.jar

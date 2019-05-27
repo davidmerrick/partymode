@@ -12,5 +12,5 @@ abstract class SlackBot : KoinComponent {
         || (message.event.channel_type == "im" && message.event.subtype != "bot_message")
         || message.event.text.contains(config.slack.botName)
 
-    public abstract fun handle(message: SlackCallbackMessage)
+    abstract fun handle(message: SlackCallbackMessage)
 }

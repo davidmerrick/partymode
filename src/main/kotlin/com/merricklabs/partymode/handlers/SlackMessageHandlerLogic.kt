@@ -19,16 +19,17 @@ class SlackMessageHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResp
     private val bot: PartyBot by inject()
 
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
-        val message = mapper.convertValue(input["body"], SlackMessage::class.java)
-        log.info("Received payload: ${input["body"]}")
+        val body = input["body"]
+        val message = mapper.convertValue(body, SlackMessage::class.java)
+        log.info("Received payload: $body")
         return when (message.type) {
             "url_verification" -> {
                 log.info("Received challenge")
-                val challengeMessage = mapper.convertValue(input["body"], SlackChallengeMessage::class.java)
+                val challengeMessage = mapper.convertValue(body, SlackChallengeMessage::class.java)
                 ApiGatewayResponse(200, challengeMessage.challenge)
             }
             "event_callback" -> {
-                val callbackMessage = mapper.convertValue(input["body"], SlackCallbackMessage::class.java)
+                val callbackMessage = mapper.convertValue(body, SlackCallbackMessage::class.java)
                 bot.handle(callbackMessage)
                 ApiGatewayResponse(200, "ok")
             }

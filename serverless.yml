@@ -46,6 +46,8 @@ functions:
           # The following makes this endpoint async, so it immediately
           # returns 200 while the Lambda is still processing.
           # Otherwise Slack will retry messages which results in duplicate responses.
+          # Todo: This doesn't work with URL verification. Probably should respond immediately to challenges,
+          # and push anything else onto a queue.
           async: true
 
 resources:

@@ -2,6 +2,7 @@ package com.merricklabs.partymode.bots
 
 import com.merricklabs.echobot.slack.SlackBotMessage
 import com.merricklabs.echobot.slack.SlackCallbackMessage
+import com.merricklabs.partymode.slack.SlackNotifier
 import com.merricklabs.partymode.storage.PartymodeStorage
 import com.merricklabs.partymode.util.PartymodeObjectMapper
 import mu.KotlinLogging
@@ -16,6 +17,7 @@ private val log = KotlinLogging.logger {}
 class PartyBot : SlackBot() {
     private val storage: PartymodeStorage by inject()
     private val mapper: PartymodeObjectMapper by inject()
+    private val slackNotifier: SlackNotifier by inject()
 
     override fun handle(message: SlackCallbackMessage) {
         if (!shouldHandle(message)) {
@@ -32,7 +34,7 @@ class PartyBot : SlackBot() {
                 val numHours = regex.find(message.event.text)!!.value.toInt()
                 storage.saveTimeToDb(numHours)
                 val suffix = if (numHours > 1) "hours" else "hour"
-                sendReply(message, "partymode enabled for $numHours $suffix")
+                slackNotifier.notify("partymode enabled for $numHours $suffix")
             }
             else -> sendReply(message, HELP_TEXT)
         }

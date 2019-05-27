@@ -37,7 +37,7 @@ functions:
       - http:
           path: call
           method: post
-  slack-event-handlerreceive:
+  slack-handler:
     handler: com.merricklabs.partymode.handlers.SlackMessageHandler
     events:
       - http:

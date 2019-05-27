@@ -8,8 +8,8 @@ jobs:
       JVM_OPTS: -Xmx3200m
       TERM: dumb
     steps:
-      - run: sudo apt-get install -y npm
-      - run: npm install -G serverless
+      - run: sudo apt-get update && apt-get install -y npm
+      - run: npm install -g serverless
 
       # checkout the repository
       - checkout

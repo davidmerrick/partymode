@@ -51,6 +51,7 @@ class SlackMessageHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResp
     }
 
     private fun shouldHandle(message: SlackCallbackMessage) = message.event.type == "app_mention"
+            || (message.event.channel_type == "im" && message.event.subtype != "bot_message")
             || message.event.text.contains(config.slack.botName)
 
     private fun handleMessage(message: SlackCallbackMessage) {

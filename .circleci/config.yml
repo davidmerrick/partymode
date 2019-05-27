@@ -8,7 +8,10 @@ jobs:
       JVM_OPTS: -Xmx3200m
       TERM: dumb
     steps:
-      - run: sudo apt-get update && sudo apt-get install -y nodejs npm
+      - run: sudo apt-get update
+      - run: sudo apt-get install -y curl
+      - run: curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+      - run: sudo apt-get install -y build-essential nodejs
       - run: npm install -g serverless
 
       # checkout the repository

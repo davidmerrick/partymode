@@ -1,0 +1,11 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: openjdk:11.0.3-jdk
+    steps:
+      - run: apt-get install -y npm
+      - run: npm install -G serverless
+
+      # checkout the repository
+      - checkout

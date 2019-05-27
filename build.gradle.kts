@@ -1,5 +1,4 @@
 group = "com.merricklabs.partymode"
-version = "dev"
 
 buildscript {
     repositories {
@@ -45,8 +44,13 @@ dependencies {
     testImplementation("org.koin:koin-test:1.0.1")
 }
 
-val deploy = tasks.create<Exec>("deploy") {
-    commandLine = listOf("serverless", "deploy")
+val deployDev = tasks.create<Exec>("deployDev") {
+    commandLine = listOf("serverless", "deploy", "--stage=dev")
 }
 
-deploy.dependsOn(tasks.getByName("shadowJar"))
+val deployPrd = tasks.create<Exec>("deployPrd") {
+    commandLine = listOf("serverless", "deploy", "--stage=prd")
+}
+
+deployDev.dependsOn(tasks.getByName("shadowJar"))
+deployPrd.dependsOn(tasks.getByName("shadowJar"))

@@ -1,7 +1,7 @@
 service: partymode
 
 custom:
-  tableName: partymode
+  tableName: partymode-${self:provider.stage}
   dynamoEndpoint: https://dynamodb.us-west-2.amazonaws.com
 
 provider:
@@ -28,7 +28,7 @@ provider:
     BOT_NAME: ${env:BOT_NAME}
 
 package:
-  artifact: build/libs/partymode-dev.jar
+  artifact: build/libs/partymode.jar
 
 functions:
   call-handler:
@@ -41,7 +41,7 @@ functions:
     handler: com.merricklabs.partymode.handlers.SlackMessageHandler
     events:
       - http:
-          path: event/receive
+          path: slack/event
           method: post
           # The following makes this endpoint async, so it immediately
           # returns 200 while the Lambda is still processing.

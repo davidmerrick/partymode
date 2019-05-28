@@ -1,6 +1,9 @@
 version: 2
 jobs:
   build:
+    branches:
+      only:
+        - master
     docker:
       - image: circleci/openjdk:11.0.2
     working_directory: ~/repo
@@ -13,9 +16,7 @@ jobs:
       - run: curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
       - run: sudo apt-get install -y build-essential nodejs
       - run: sudo npm install -g serverless
-
-      # checkout the repository
-      - checkout
+      - checkout # Check out the repo
       - deploy:
           name: Deploy to AWS
           command: ./gradlew deployPrd

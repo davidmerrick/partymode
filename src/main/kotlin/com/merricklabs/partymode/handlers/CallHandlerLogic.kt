@@ -5,6 +5,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler
 import com.merricklabs.partymode.PartymodeConfig
 import com.merricklabs.partymode.models.ApiGatewayResponse
 import com.merricklabs.partymode.slack.SlackNotifier
+import com.merricklabs.partymode.sns.SnsNotifier
 import com.merricklabs.partymode.storage.PartymodeStorage
 import com.twilio.twiml.VoiceResponse
 import com.twilio.twiml.voice.Dial
@@ -20,6 +21,7 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
     private val storage: PartymodeStorage by inject()
     private val config: PartymodeConfig by inject()
     private val slackNotifier: SlackNotifier by inject()
+    private val snsNotifier: SnsNotifier by inject()
 
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
         return ApiGatewayResponse.build {
@@ -33,11 +35,7 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
         log.info("Got lease: $partyLease")
         if (partyLease.isActive()) {
             log.info("Buzzing someone in.")
-            try {
-                slackNotifier.notify("Buzzed someone in")
-            } catch (e: Exception){
-                log.error("Error posting Slack notification", e)
-            }
+            pushNotifications()
             return VoiceResponse.Builder()
                     .play(Play.Builder().digits("ww999").build())
                     .build()
@@ -47,6 +45,21 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
         return VoiceResponse.Builder()
                 .dial(Dial.Builder().number(number).build())
                 .build()
+    }
+
+    private fun pushNotifications(){
+        val message = "Buzzed someone in"
+        // Push to SNS topic
+        if(config.sns.topicArn != null){
+            snsNotifier.notify(message)
+        }
+
+        // Push to Slack
+        try {
+            slackNotifier.notify(message)
+        } catch (e: Exception){
+            log.error("Error posting Slack notification", e)
+        }
     }
 }
 

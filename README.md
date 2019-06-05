@@ -45,6 +45,17 @@ Change `async` back to `true` in your `serverless.yaml` and redeploy with `./gra
 
 In your Twilio dashboard, create a TwiML app and point the endpoints to the ones provisioned in AWS. Point your Twilio number to this app.
 
+## Optional: CircleCI Pipeline
+
+This repo contains config for deploying to prod via CircleCI. Simply set the following environment variables in your pipeline:
+
+* `AWS_ACCESS_KEY_ID`
+* `AWS_SECRET_ACCESS_KEY`
+* `BOT_TOKEN`
+* `MY_NUMBER`
+* `SLACK_WEBHOOK_URI`
+* `SNS_TOPIC`
+
 ## Final steps
 
 Finally, of course, have your apartment forward your call box to your Twilio number 😎.

@@ -4,14 +4,48 @@ Buzzing people into your apartment building when you're having a party? Ain't no
 
 # Installation
 
-1. Get a number from [Twilio](https://www.twilio.com/), which costs $1/month.
-2. Get an AWS account. 
-3. Use [Serverless](https://serverless.com/) to deploy the app with `./gradlew deploy`.
-4. This will provision a DynamoDb table, 2 Lambda functions, and 2 API Gateway endpoints.
-5. After deployment, log into the AWS console and set the `MY_NUMBER` env var in your Lambda to your phone number.
-6. Create a Slack webhook and set the `SLACK_WEBHOOK_URI` env var to that uri.
-7. Create a TwiML app and point the endpoints to the ones provisioned in AWS. Point your Twilio number to this app.
-8. Create a Slack bot and subscribe to the following bot events: `app_mention`, `message.channels`, and `message.im`.
+## Prerequisites
+
+* Get a number from [Twilio](https://www.twilio.com/), which costs $1/month.
+* Get an AWS account. 
+* Install [Serverless](https://serverless.com/).
+* Get admin access to your Slack workspace.
+
+## Slack setup
+
+* Create a Slack webhook and set the `SLACK_WEBHOOK_URI` env var to that uri.
+* Create a Slack bot and subscribe to the following bot events: `app_mention`, `message.channels`, and `message.im`.
+
+## Initial deployment
+
+Set the `MY_NUMBER` env var to your phone number. This will get passed to your Lambda functions and used by Twilio
+to decide where to forward the call when partymode is disabled.
+
+In `serverless.yaml`, change `async` to `false` in the Slack handler:
+```yaml
+slack-handler:
+    handler: com.merricklabs.partymode.handlers.SlackMessageHandler
+    events:
+      - http:
+          path: slack/event
+          method: post
+          async: false 
+```
+Synchronous is required at first so that Slack can verify your url.
+
+Deploy the app with `./gradlew deployDev`.
+
+This will give you urls for Slack and Twilio.
+
+In Slack, point your bot at the Slack url and verify it.
+
+Change `async` back to `true` in your `serverless.yaml` and redeploy with `./gradlew deployDev`.
+
+## Twilio setup
+
+In your Twilio dashboard, create a TwiML app and point the endpoints to the ones provisioned in AWS. Point your Twilio number to this app.
+
+## Final steps
 
 Finally, of course, have your apartment forward your call box to your Twilio number 😎.
 

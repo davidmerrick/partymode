@@ -19,22 +19,17 @@ class SlackMessageHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResp
     private val bot: PartyBot by inject()
 
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
-        // This ugliness is necessary because
-        // if endpoint is event handler, body is given as an object, otherwise as a String
-        val body = when (input["body"]) {
-            is String -> input["body"] as String
-            else -> input["body"] as Any
-        }
-        val message = deserialize(body, SlackMessage::class.java)
+        val body = input["body"]
+        val message = deserializeInput(body, SlackMessage::class.java)
         log.info("Received payload: $body")
         return when (message.type) {
             "url_verification" -> {
                 log.info("Received challenge")
-                val challengeMessage = deserialize(body, SlackChallengeMessage::class.java)
+                val challengeMessage = deserializeInput(body, SlackChallengeMessage::class.java)
                 ApiGatewayResponse(200, challengeMessage.challenge)
             }
             "event_callback" -> {
-                val callbackMessage = deserialize(body, SlackCallbackMessage::class.java)
+                val callbackMessage = deserializeInput(body, SlackCallbackMessage::class.java)
                 bot.handle(callbackMessage)
                 ApiGatewayResponse(200, "ok")
             }
@@ -42,7 +37,9 @@ class SlackMessageHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResp
         }
     }
 
-    private fun <T> deserialize(body: Any, clazz: Class<T>): T = if (body is String) {
+    // This ugliness is necessary because
+    // if endpoint is event handler, body is given as an object, otherwise as a String
+    private fun <T> deserializeInput(body: Any?, clazz: Class<T>): T = if (body is String) {
         mapper.readValue(body, clazz)
     } else {
         mapper.convertValue(body, clazz)

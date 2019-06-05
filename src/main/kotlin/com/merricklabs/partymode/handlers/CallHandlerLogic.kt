@@ -47,7 +47,6 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
 
     private fun pushNotifications() {
         val message = "Buzzed someone in"
-        // Push to SNS topic
         if (config.sns.topicArn != null) {
             snsNotifier.notify(message)
         }

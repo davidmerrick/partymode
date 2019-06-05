@@ -34,7 +34,7 @@ class PartyBot : SlackBot() {
                 val numHours = regex.find(message.event.text)!!.value.toInt()
                 storage.saveTimeToDb(numHours)
                 val suffix = if (numHours > 1) "hours" else "hour"
-                slackNotifier.notify("partymode enabled for $numHours $suffix")
+                sendReply(message, "partymode enabled for $numHours $suffix")
             }
             else -> sendReply(message, HELP_TEXT)
         }

@@ -38,7 +38,7 @@ object Versions {
 
     const val org_jetbrains_kotlin_jvm_gradle_plugin: String = "1.3.31" 
 
-    const val org_jetbrains_kotlin: String = "1.3.31" 
+    const val kotlin = "1.3.31"
 
     const val org_koin: String = "1.0.1" // available: "2.0.1"
 

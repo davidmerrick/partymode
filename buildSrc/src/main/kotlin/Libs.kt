@@ -87,18 +87,18 @@ object Libs {
     /**
      * https://kotlinlang.org/ */
     const val kotlin_gradle_plugin: String = "org.jetbrains.kotlin:kotlin-gradle-plugin:" +
-            Versions.org_jetbrains_kotlin
+            Versions.kotlin
 
     /**
      * https://kotlinlang.org/ */
     const val kotlin_scripting_compiler_embeddable: String =
             "org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable:" +
-            Versions.org_jetbrains_kotlin
+            Versions.kotlin
 
     /**
      * https://kotlinlang.org/ */
     const val kotlin_stdlib_jdk8: String = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:" +
-            Versions.org_jetbrains_kotlin
+            Versions.kotlin
 
     const val koin_core: String = "org.koin:koin-core:" + Versions.org_koin
 

@@ -6,9 +6,9 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath(kotlin("gradle-plugin", version = "1.3.31"))
+        classpath(kotlin("gradle-plugin", version = Versions.org_jetbrains_kotlin))
         classpath("de.sebastianboegl.gradle.plugins:shadow-log4j-transformer:2.1.1")
-        classpath("com.github.jengelman.gradle.plugins:shadow:2.0.1")
+        classpath("com.github.jengelman.gradle.plugins:shadow:${Versions.shadow_log4j_transformer}")
     }
 }
 
@@ -18,14 +18,15 @@ repositories {
 }
 
 plugins {
+    id("de.fayard.buildSrcVersions") version Versions.de_fayard_buildsrcversions_gradle_plugin
     java
-    kotlin("jvm") version "1.3.31"
-    id("com.github.johnrengelman.shadow") version "4.0.4"
+    kotlin("jvm") version Versions.org_jetbrains_kotlin
+    id("com.github.johnrengelman.shadow") version Versions.shadow
 }
 
 dependencies {
-    implementation("com.twilio.sdk:twilio:7.17.0")
-    implementation("com.squareup.okhttp3:okhttp:3.14.1")
+    implementation(Libs.twilio)
+    implementation(Libs.okhttp)
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.slf4j:slf4j-api:1.7.25")
     implementation("org.slf4j:slf4j-jdk14:1.7.26")

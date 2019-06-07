@@ -1,17 +1,5 @@
 group = "com.merricklabs.partymode"
 
-buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-    dependencies {
-        classpath(kotlin("gradle-plugin", version = Versions.kotlin))
-        classpath("de.sebastianboegl.gradle.plugins:shadow-log4j-transformer:${Versions.shadow_log4j_transformer}")
-        classpath("com.github.jengelman.gradle.plugins:shadow:${Versions.shadow}")
-    }
-}
-
 repositories {
     mavenCentral()
     jcenter()

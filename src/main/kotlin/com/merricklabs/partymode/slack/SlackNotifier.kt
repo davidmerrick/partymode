@@ -1,6 +1,6 @@
 package com.merricklabs.partymode.slack
 
-import com.merricklabs.partymode.PartymodeConfig
+import com.merricklabs.partymode.config.PartymodeConfig
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -9,7 +9,7 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
 class SlackNotifier : KoinComponent {
-    private val config: PartymodeConfig  by inject()
+    private val config: PartymodeConfig by inject()
 
     fun notify(message: String){
         val okHttpClient = OkHttpClient()

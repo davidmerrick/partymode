@@ -1,6 +1,6 @@
 package com.merricklabs.partymode.twilio
 
-import org.testng.Assert
+import io.kotlintest.shouldBe
 import org.testng.annotations.Test
 
 class TwilioUtilTest {
@@ -8,7 +8,7 @@ class TwilioUtilTest {
     @Test
     private fun `parse input`(){
         val twilioInput = TwilioUtil.parseInput("Body=foo&subject=bar&From=%2B11239999999")
-        Assert.assertEquals(twilioInput.getValue("Body")[0], "foo")
-        Assert.assertEquals(twilioInput.getValue("From")[0], "+11239999999")
+        twilioInput.getValue("Body")[0] shouldBe  "foo"
+        twilioInput.getValue("From")[0] shouldBe  "+11239999999"
     }
 }

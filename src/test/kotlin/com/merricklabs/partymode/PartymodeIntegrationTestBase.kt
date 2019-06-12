@@ -1,5 +1,9 @@
 package com.merricklabs.partymode
 
+import com.merricklabs.partymode.config.PartymodeConfig
+import com.merricklabs.partymode.config.PartymodeConfigImpl
+import com.merricklabs.partymode.storage.PartymodeStorage
+import com.merricklabs.partymode.testutil.PartymodeTestModule
 import com.merricklabs.partymode.testutil.TestConstants.INTEGRATION_GROUP
 import org.koin.standalone.StandAloneContext.loadKoinModules
 import org.koin.standalone.StandAloneContext.stopKoin
@@ -19,13 +23,12 @@ open class PartymodeIntegrationTestBase : KoinTest {
     }
 
     private fun <T> uninitialized(): T = null as T
-
-    val partymodeConfig: PartymodeConfig by inject()
+    val partymodeStorage: PartymodeStorage by inject()
 
     @BeforeMethod(groups = [INTEGRATION_GROUP])
     fun beforeMethod() {
-        loadKoinModules(PartymodeModule)
-        declareMock<PartymodeConfig>()
+        loadKoinModules(PartymodeTestModule)
+        declareMock<PartymodeStorage>()
     }
 
     @AfterMethod(groups = [INTEGRATION_GROUP])

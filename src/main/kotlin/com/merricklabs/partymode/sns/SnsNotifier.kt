@@ -2,7 +2,8 @@ package com.merricklabs.partymode.sns
 
 import com.amazonaws.services.sns.AmazonSNSAsyncClientBuilder
 import com.amazonaws.services.sns.model.PublishRequest
-import com.merricklabs.partymode.PartymodeConfig
+import com.merricklabs.partymode.config.PartymodeConfig
+import com.merricklabs.partymode.config.PartymodeConfigImpl
 import mu.KotlinLogging
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -10,7 +11,7 @@ import org.koin.standalone.inject
 private val log = KotlinLogging.logger {}
 
 class SnsNotifier : KoinComponent {
-    private val config: PartymodeConfig  by inject()
+    private val config: PartymodeConfig by inject()
 
     fun notify(message: String){
         log.info("Pushing notification to SNS")

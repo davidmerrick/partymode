@@ -32,6 +32,7 @@ dependencies {
 
     testImplementation(Libs.testng)
     testImplementation(Libs.koin_test)
+    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.7")
 }
 
 val deployDev = tasks.create<Exec>("deployDev") {

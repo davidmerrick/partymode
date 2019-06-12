@@ -1,6 +1,7 @@
-package com.merricklabs.partymode
+package com.merricklabs.partymode.testutil
 
 import com.merricklabs.partymode.bots.PartyBot
+import com.merricklabs.partymode.config.PartymodeConfig
 import com.merricklabs.partymode.config.PartymodeConfigImpl
 import com.merricklabs.partymode.handlers.CallHandlerLogic
 import com.merricklabs.partymode.handlers.SlackMessageHandlerLogic
@@ -10,8 +11,8 @@ import com.merricklabs.partymode.storage.PartymodeStorage
 import com.merricklabs.partymode.util.PartymodeObjectMapper
 import org.koin.dsl.module.module
 
-val PartymodeModule = module {
-    single { PartymodeConfigImpl() }
+val PartymodeTestModule = module {
+    single { MockPartymodeConfig() as PartymodeConfig }
     single { PartymodeStorage() }
     single { CallHandlerLogic() }
     single { SlackMessageHandlerLogic() }

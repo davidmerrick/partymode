@@ -32,7 +32,7 @@ dependencies {
 
     testImplementation(Libs.testng)
     testImplementation(Libs.koin_test)
-    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.7")
+    testImplementation(Libs.kotlintest_runner_junit5)
 }
 
 val deployDev = tasks.create<Exec>("deployDev") {
@@ -43,5 +43,11 @@ val deployPrd = tasks.create<Exec>("deployPrd") {
     commandLine = listOf("serverless", "deploy", "--stage=prd")
 }
 
+val deploy = deployDev
+
 deployDev.dependsOn(tasks.getByName("shadowJar"))
 deployPrd.dependsOn(tasks.getByName("shadowJar"))
+
+tasks.create<Test>("test_all") {
+    useTestNG()
+}

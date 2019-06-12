@@ -60,6 +60,14 @@ This repo contains config for deploying to prod via CircleCI. Simply set the fol
 
 Finally, of course, have your apartment forward your call box to your Twilio number 😎.
 
+# Kotlin Gradle DSL
+
+This project uses the [Kotlin Gradle DSL](https://github.com/gradle/kotlin-dsl).
+To keep the `build.gradle.kts` clean, it uses [buildSrcVersions](https://github.com/jmfayard/buildSrcVersions).
+
+After adding a new dependency, run this plugin with: `./gradlew buildSrcVersions`.
+
 # Reference:
+
 - https://www.twilio.com/blog/2018/03/send-an-sms-message-with-kotlin-in-30-seconds.html
 - https://www.twilio.com/docs/voice/quickstart/java#respond-to-an-incoming-phone-call

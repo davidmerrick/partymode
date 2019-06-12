@@ -8,7 +8,7 @@ repositories {
 plugins {
     id("de.fayard.buildSrcVersions") version Versions.de_fayard_buildsrcversions_gradle_plugin
     java
-    kotlin("jvm") version Versions.kotlin
+    kotlin("jvm") version Versions.org_jetbrains_kotlin
     id("com.github.johnrengelman.shadow") version Versions.com_github_johnrengelman_shadow_gradle_plugin
 }
 

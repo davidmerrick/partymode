@@ -51,8 +51,6 @@ object Libs {
     const val jackson_module_kotlin: String =
             "com.fasterxml.jackson.module:jackson-module-kotlin:" + Versions.jackson_module_kotlin
 
-    const val shadow: String = "com.github.jengelman.gradle.plugins:shadow:" + Versions.shadow
-
     const val com_github_johnrengelman_shadow_gradle_plugin: String =
             "com.github.johnrengelman.shadow:com.github.johnrengelman.shadow.gradle.plugin:" +
             Versions.com_github_johnrengelman_shadow_gradle_plugin
@@ -70,15 +68,14 @@ object Libs {
             Versions.de_fayard_buildsrcversions_gradle_plugin
 
     /**
-     * https://github.com/TheBoegl/shadow-log4j-transformer */
-    const val shadow_log4j_transformer: String =
-            "de.sebastianboegl.gradle.plugins:shadow-log4j-transformer:" +
-            Versions.shadow_log4j_transformer
-
-    /**
      * https://github.com/MicroUtils/kotlin-logging */
     const val kotlin_logging: String = "io.github.microutils:kotlin-logging:" +
             Versions.kotlin_logging
+
+    /**
+     * http://www.github.com/kotlintest/kotlintest */
+    const val kotlintest_runner_junit5: String = "io.kotlintest:kotlintest-runner-junit5:" +
+            Versions.kotlintest_runner_junit5
 
     const val org_jetbrains_kotlin_jvm_gradle_plugin: String =
             "org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin:" +
@@ -86,19 +83,14 @@ object Libs {
 
     /**
      * https://kotlinlang.org/ */
-    const val kotlin_gradle_plugin: String = "org.jetbrains.kotlin:kotlin-gradle-plugin:" +
-            Versions.kotlin
-
-    /**
-     * https://kotlinlang.org/ */
     const val kotlin_scripting_compiler_embeddable: String =
             "org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable:" +
-            Versions.kotlin
+            Versions.org_jetbrains_kotlin
 
     /**
      * https://kotlinlang.org/ */
     const val kotlin_stdlib_jdk8: String = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:" +
-            Versions.kotlin
+            Versions.org_jetbrains_kotlin
 
     const val koin_core: String = "org.koin:koin-core:" + Versions.org_koin
 

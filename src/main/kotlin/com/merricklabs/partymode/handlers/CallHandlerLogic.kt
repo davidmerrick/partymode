@@ -2,7 +2,8 @@ package com.merricklabs.partymode.handlers
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
-import com.merricklabs.partymode.PartymodeConfig
+import com.merricklabs.partymode.config.PartymodeConfig
+import com.merricklabs.partymode.config.PartymodeConfigImpl
 import com.merricklabs.partymode.models.ApiGatewayResponse
 import com.merricklabs.partymode.sns.SnsNotifier
 import com.merricklabs.partymode.storage.PartymodeStorage

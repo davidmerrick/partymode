@@ -7,7 +7,8 @@ import com.amazonaws.services.dynamodbv2.document.DynamoDB
 import com.amazonaws.services.dynamodbv2.document.Table
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.amazonaws.services.dynamodbv2.model.ScanRequest
-import com.merricklabs.partymode.PartymodeConfig
+import com.merricklabs.partymode.config.DynamoDbConfig
+import com.merricklabs.partymode.config.PartymodeConfig
 import com.merricklabs.partymode.models.PartyLease
 import mu.KotlinLogging
 import org.koin.standalone.KoinComponent
@@ -17,9 +18,9 @@ import java.time.Instant
 private val log = KotlinLogging.logger {}
 
 class PartymodeStorage : KoinComponent {
-    private val config by inject<PartymodeConfig>()
 
-    private val dynamoDbConfig: PartymodeConfig.DynamoDb
+    private val config by inject<PartymodeConfig>()
+    private val dynamoDbConfig: DynamoDbConfig
     private val table: Table
     private val client: AmazonDynamoDB
 

@@ -3,7 +3,6 @@ package com.merricklabs.partymode.handlers
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import com.merricklabs.partymode.config.PartymodeConfig
-import com.merricklabs.partymode.config.PartymodeConfigImpl
 import com.merricklabs.partymode.models.ApiGatewayResponse
 import com.merricklabs.partymode.sns.SnsNotifier
 import com.merricklabs.partymode.storage.PartymodeStorage
@@ -23,6 +22,9 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
     private val snsNotifier: SnsNotifier by inject()
 
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
+        val body = input["body"]
+        log.info("Received payload: $body")
+
         return ApiGatewayResponse.build {
             rawBody = getResponse().toXml()
             headers = mapOf("Content-Type" to "application/xml")

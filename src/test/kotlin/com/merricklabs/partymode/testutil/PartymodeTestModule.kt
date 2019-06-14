@@ -1,5 +1,6 @@
 package com.merricklabs.partymode.testutil
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.merricklabs.partymode.bots.PartyBot
 import com.merricklabs.partymode.config.PartymodeConfig
 import com.merricklabs.partymode.config.PartymodeConfigImpl
@@ -18,6 +19,6 @@ val PartymodeTestModule = module {
     single { SlackMessageHandlerLogic() }
     single { SlackNotifier() }
     single { PartyBot() }
-    single { PartymodeObjectMapper() }
+    single { PartymodeObjectMapper() as ObjectMapper }
     single { SnsNotifier() }
 }

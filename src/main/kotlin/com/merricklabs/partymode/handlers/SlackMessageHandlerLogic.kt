@@ -7,7 +7,6 @@ import com.merricklabs.echobot.slack.SlackChallengeMessage
 import com.merricklabs.echobot.slack.SlackMessage
 import com.merricklabs.partymode.bots.PartyBot
 import com.merricklabs.partymode.models.ApiGatewayResponse
-import com.merricklabs.partymode.util.PartymodeObjectMapper
 import mu.KotlinLogging
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -15,34 +14,26 @@ import org.koin.standalone.inject
 private val log = KotlinLogging.logger {}
 
 class SlackMessageHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, KoinComponent {
-    private val mapper: PartymodeObjectMapper by inject()
+    private val helpers: HandlerHelpers by inject()
     private val bot: PartyBot by inject()
 
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
         val body = input["body"]
-        val message = deserializeInput(body, SlackMessage::class.java)
+        val message = helpers.deserializeInput(body, SlackMessage::class.java)
         log.info("Received payload: $body")
         return when (message.type) {
             "url_verification" -> {
                 log.info("Received challenge")
-                val challengeMessage = deserializeInput(body, SlackChallengeMessage::class.java)
+                val challengeMessage = helpers.deserializeInput(body, SlackChallengeMessage::class.java)
                 ApiGatewayResponse(200, challengeMessage.challenge)
             }
             "event_callback" -> {
-                val callbackMessage = deserializeInput(body, SlackCallbackMessage::class.java)
+                val callbackMessage = helpers.deserializeInput(body, SlackCallbackMessage::class.java)
                 bot.handle(callbackMessage)
                 ApiGatewayResponse(200, "ok")
             }
             else -> ApiGatewayResponse(200, "ok")
         }
-    }
-
-    // This ugliness is necessary because
-    // if endpoint is event handler, body is given as an object, otherwise as a String
-    private fun <T> deserializeInput(body: Any?, clazz: Class<T>): T = if (body is String) {
-        mapper.readValue(body, clazz)
-    } else {
-        mapper.convertValue(body, clazz)
     }
 }
 

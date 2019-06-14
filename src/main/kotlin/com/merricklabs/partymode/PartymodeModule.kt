@@ -1,8 +1,10 @@
 package com.merricklabs.partymode
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.merricklabs.partymode.bots.PartyBot
 import com.merricklabs.partymode.config.PartymodeConfigImpl
 import com.merricklabs.partymode.handlers.CallHandlerLogic
+import com.merricklabs.partymode.handlers.HandlerHelpers
 import com.merricklabs.partymode.handlers.SlackMessageHandlerLogic
 import com.merricklabs.partymode.slack.SlackNotifier
 import com.merricklabs.partymode.sns.SnsNotifier
@@ -17,6 +19,7 @@ val PartymodeModule = module {
     single { SlackMessageHandlerLogic() }
     single { SlackNotifier() }
     single { PartyBot() }
-    single { PartymodeObjectMapper() }
+    single { PartymodeObjectMapper() as ObjectMapper }
     single { SnsNotifier() }
+    single { HandlerHelpers() }
 }

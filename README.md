@@ -18,8 +18,13 @@ Buzzing people into your apartment building when you're having a party? Ain't no
 
 ## Initial deployment
 
-Set the `MY_NUMBER` env var to your phone number. This will get passed to your Lambda functions and used by Twilio
-to decide where to forward the call when partymode is disabled.
+Set the `MY_NUMBER` env var to your phone number. Make sure the format is `+19999999999`. 
+
+This will get passed to your Lambda functions and used by Twilio to decide where to forward the call when partymode is disabled.
+
+Set the `CALLBOX_NUMBER` env var to your call box's phone number. 
+Make sure the format is `+19999999999`.
+The app will reject calls from any other number, in the event you inevitably get spammed with robocalls.
 
 In `serverless.yaml`, change `async` to `false` in the Slack handler:
 ```yaml
@@ -53,6 +58,7 @@ This repo contains config for deploying to prod via CircleCI. Simply set the fol
 * `AWS_SECRET_ACCESS_KEY`
 * `BOT_TOKEN`
 * `MY_NUMBER`
+* `CALLBOX_NUMBER`
 * `SLACK_WEBHOOK_URI`
 * `SNS_TOPIC`
 

@@ -7,7 +7,6 @@ repositories {
 
 plugins {
     id("de.fayard.buildSrcVersions") version Versions.de_fayard_buildsrcversions_gradle_plugin
-    java
     kotlin("jvm") version Versions.org_jetbrains_kotlin
     id("com.github.johnrengelman.shadow") version Versions.com_github_johnrengelman_shadow_gradle_plugin
 }
@@ -43,11 +42,13 @@ val deployPrd = tasks.create<Exec>("deployPrd") {
     commandLine = listOf("serverless", "deploy", "--stage=prd")
 }
 
-val deploy = deployDev
+// Alias for deploy dev
+val deploy = tasks.create("deploy")
+deploy.dependsOn(deployDev)
 
 deployDev.dependsOn(tasks.getByName("shadowJar"))
 deployPrd.dependsOn(tasks.getByName("shadowJar"))
 
-tasks.create<Test>("test_all") {
+tasks.test {
     useTestNG()
 }

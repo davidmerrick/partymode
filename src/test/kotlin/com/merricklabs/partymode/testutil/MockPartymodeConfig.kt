@@ -16,6 +16,7 @@ class MockPartymodeConfig : PartymodeConfig {
 
     init {
         Mockito.`when`(mockPhone.myNumber).thenReturn(MY_NUMBER)
+        Mockito.`when`(mockPhone.callboxNumber).thenReturn(MY_NUMBER)
     }
 
     override val dynamoDb: DynamoDbConfig
@@ -29,5 +30,6 @@ class MockPartymodeConfig : PartymodeConfig {
 
     companion object {
         const val MY_NUMBER = "8675309"
+        const val CALLBOX_NUMBER = "8675309"
     }
 }

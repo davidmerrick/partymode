@@ -23,7 +23,7 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
 
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
         val body = input["body"]
-        log.info("Received payload: $body")
+        log.info("Received input: $input")
 
         return ApiGatewayResponse.build {
             rawBody = getResponse().toXml()

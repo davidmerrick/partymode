@@ -3,6 +3,7 @@ package com.merricklabs.partymode.handlers
 import com.amazonaws.services.lambda.runtime.Context
 import com.merricklabs.partymode.PartymodeIntegrationTestBase
 import com.merricklabs.partymode.models.PartyLease
+import com.merricklabs.partymode.testutil.MockPartymodeConfig.Companion.CALLBOX_NUMBER
 import com.merricklabs.partymode.testutil.MockPartymodeConfig.Companion.MY_NUMBER
 import io.kotlintest.matchers.string.contain
 import io.kotlintest.shouldHave
@@ -36,7 +37,9 @@ class CallHandlerLogicTest: PartymodeIntegrationTestBase() {
 
     @Test
     fun `If call is from callbox number, allow it`(){
-        // Todo: Implement this
+        val testPayload = mapOf(
+                "From" to CALLBOX_NUMBER
+        )
     }
 
     @Test

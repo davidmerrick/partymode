@@ -22,8 +22,11 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
     private val snsNotifier: SnsNotifier by inject()
 
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
-        val body = input["body"]
-        log.info("Received input: $input")
+        val body = input["body"] as Map<String, Any>
+        log.info("Received input: $body")
+        log.info("From: ${body["From"]}")
+
+        // Twilio POSTS a application/x-www-form-urlencoded string to this endpoint
 
         return ApiGatewayResponse.build {
             rawBody = getResponse().toXml()

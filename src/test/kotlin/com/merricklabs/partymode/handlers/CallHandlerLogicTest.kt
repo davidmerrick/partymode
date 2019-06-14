@@ -3,6 +3,7 @@ package com.merricklabs.partymode.handlers
 import com.amazonaws.services.lambda.runtime.Context
 import com.merricklabs.partymode.PartymodeIntegrationTestBase
 import com.merricklabs.partymode.models.PartyLease
+import com.merricklabs.partymode.testutil.MockPartymodeConfig
 import com.merricklabs.partymode.testutil.MockPartymodeConfig.Companion.CALLBOX_NUMBER
 import com.merricklabs.partymode.testutil.MockPartymodeConfig.Companion.MY_NUMBER
 import io.kotlintest.matchers.string.contain
@@ -14,7 +15,7 @@ import org.testng.annotations.Test
 class CallHandlerLogicTest: PartymodeIntegrationTestBase() {
 
     private val callHandlerLogic: CallHandlerLogic by inject()
-    private val mockInput = mapOf("foo" to "bar")
+    private val mockInput = mapOf("body" to mapOf("From" to CALLBOX_NUMBER))
     private val mockContext = Mockito.mock(Context::class.java)
 
     @Test

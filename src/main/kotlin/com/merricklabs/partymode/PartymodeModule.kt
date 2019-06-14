@@ -2,6 +2,7 @@ package com.merricklabs.partymode
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.merricklabs.partymode.bots.PartyBot
+import com.merricklabs.partymode.config.PartymodeConfig
 import com.merricklabs.partymode.config.PartymodeConfigImpl
 import com.merricklabs.partymode.handlers.CallHandlerLogic
 import com.merricklabs.partymode.handlers.HandlerHelpers
@@ -13,7 +14,7 @@ import com.merricklabs.partymode.util.PartymodeObjectMapper
 import org.koin.dsl.module.module
 
 val PartymodeModule = module {
-    single { PartymodeConfigImpl() }
+    single { PartymodeConfigImpl() as PartymodeConfig }
     single { PartymodeStorage() }
     single { CallHandlerLogic() }
     single { SlackMessageHandlerLogic() }

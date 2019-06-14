@@ -1,10 +1,10 @@
 package com.merricklabs.partymode.bots
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.merricklabs.echobot.slack.SlackBotMessage
 import com.merricklabs.echobot.slack.SlackCallbackMessage
 import com.merricklabs.partymode.slack.SlackNotifier
 import com.merricklabs.partymode.storage.PartymodeStorage
-import com.merricklabs.partymode.util.PartymodeObjectMapper
 import mu.KotlinLogging
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
@@ -16,7 +16,7 @@ private val log = KotlinLogging.logger {}
 
 class PartyBot : SlackBot() {
     private val storage: PartymodeStorage by inject()
-    private val mapper: PartymodeObjectMapper by inject()
+    private val mapper: ObjectMapper by inject()
     private val slackNotifier: SlackNotifier by inject()
 
     override fun handle(message: SlackCallbackMessage) {

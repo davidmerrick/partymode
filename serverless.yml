@@ -27,6 +27,7 @@ provider:
     DYNAMODB_ENDPOINT: ${self:custom.dynamoEndpoint}
     DYNAMODB_TABLE_NAME: ${self:custom.tableName}
     MY_NUMBER: ${env:MY_NUMBER}
+    CALLBOX_NUMBER: ${env:CALLBOX_NUMBER}
     SLACK_WEBHOOK_URI: ${env:SLACK_WEBHOOK_URI}
     BOT_TOKEN: ${env:BOT_TOKEN}
     BOT_NAME: ${env:BOT_NAME}

@@ -32,6 +32,7 @@ provider:
     BOT_TOKEN: ${env:BOT_TOKEN}
     BOT_NAME: ${env:BOT_NAME}
     SNS_TOPIC: ${env:SNS_TOPIC}
+    TWILIO_AUTH_TOKEN: ${env:TWILIO_AUTH_TOKEN}
 
 package:
   artifact: build/libs/${self:service}.jar

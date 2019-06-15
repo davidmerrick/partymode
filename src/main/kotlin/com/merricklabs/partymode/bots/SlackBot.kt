@@ -2,8 +2,8 @@ package com.merricklabs.partymode.bots
 
 import com.merricklabs.echobot.slack.SlackCallbackMessage
 import com.merricklabs.partymode.config.PartymodeConfig
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 abstract class SlackBot : KoinComponent {
     protected val config: PartymodeConfig by inject()

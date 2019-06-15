@@ -12,8 +12,8 @@ import com.twilio.twiml.voice.Number
 import com.twilio.twiml.voice.Play
 import com.twilio.twiml.voice.Reject
 import mu.KotlinLogging
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import java.net.URLDecoder
 
 private val log = KotlinLogging.logger {}

@@ -11,8 +11,8 @@ import com.merricklabs.partymode.config.DynamoDbConfig
 import com.merricklabs.partymode.config.PartymodeConfig
 import com.merricklabs.partymode.models.PartyLease
 import mu.KotlinLogging
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import java.time.Instant
 
 private val log = KotlinLogging.logger {}

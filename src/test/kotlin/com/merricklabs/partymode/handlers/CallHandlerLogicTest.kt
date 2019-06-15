@@ -3,12 +3,10 @@ package com.merricklabs.partymode.handlers
 import com.amazonaws.services.lambda.runtime.Context
 import com.merricklabs.partymode.PartymodeIntegrationTestBase
 import com.merricklabs.partymode.models.PartyLease
-import com.merricklabs.partymode.testutil.MockPartymodeConfig.Companion.CALLBOX_NUMBER
-import com.merricklabs.partymode.testutil.MockPartymodeConfig.Companion.MY_NUMBER
 import io.kotlintest.matchers.string.contain
 import io.kotlintest.shouldHave
 import io.kotlintest.shouldNotHave
-import org.koin.standalone.inject
+import org.koin.core.inject
 import org.mockito.Mockito
 import org.testng.annotations.Test
 import java.net.URLEncoder

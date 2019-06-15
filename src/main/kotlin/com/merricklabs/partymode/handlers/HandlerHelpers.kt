@@ -1,8 +1,8 @@
 package com.merricklabs.partymode.handlers
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class HandlerHelpers : KoinComponent {
     private val mapper: ObjectMapper by inject()

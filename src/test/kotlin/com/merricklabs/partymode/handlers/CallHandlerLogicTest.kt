@@ -25,6 +25,10 @@ class CallHandlerLogicTest : PartymodeIntegrationTestBase() {
 
     private val mockInput = mapOf(
             "headers" to mapOf(X_TWILIO_SIGNATURE to "12345"),
+            "requestContext" to mapOf(
+                    "domainName" to "foo",
+                    "resourcePath" to "/bar/baz"
+            ),
             "body" to "From=${URLEncoder.encode(CALLBOX_NUMBER, "UTF-8")}" +
                     "&To=12345" +
                     "&CallSid=12345" +
@@ -67,6 +71,10 @@ class CallHandlerLogicTest : PartymodeIntegrationTestBase() {
         val invalidNumber = "9999999999"
         val mockInput = mapOf(
                 "headers" to mapOf(X_TWILIO_SIGNATURE to "12345"),
+                "requestContext" to mapOf(
+                        "domainName" to "foo",
+                        "resourcePath" to "/bar/baz"
+                ),
                 "body" to "From=${URLEncoder.encode(invalidNumber, "UTF-8")}" +
                         "&To=12345" +
                         "&CallSid=12345" +

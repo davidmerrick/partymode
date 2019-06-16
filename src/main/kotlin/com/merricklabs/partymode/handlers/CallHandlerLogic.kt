@@ -33,7 +33,7 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
         val twilioParams = TwilioParams(body)
 
         // Validate the request
-        if (!validateRequest(twilioParams, input["headers"] as Map<String, String>)) {
+        if (!validateRequest(twilioParams, getRequestUrl(input), getHeaders(input))) {
             return buildRejectResponse()
         }
 
@@ -48,7 +48,14 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
         return buildRejectResponse()
     }
 
-    private fun validateRequest(twilioParams: TwilioParams, headers: Map<String, String>): Boolean {
+    private fun getHeaders(input: Map<String, Any>) = input["headers"] as Map<String, String>
+
+    private fun getRequestUrl(input: Map<String, Any>): String {
+        val requestContext = input["requestContext"] as Map<String, String>
+        return "https://${requestContext["domainName"]}${requestContext["path"]}"
+    }
+
+    private fun validateRequest(twilioParams: TwilioParams, requestUrl: String, headers: Map<String, String>): Boolean {
         if (!headers.containsKey(X_TWILIO_SIGNATURE)) {
             log.warn("Request headers does not contain Twilio signature.")
             return false

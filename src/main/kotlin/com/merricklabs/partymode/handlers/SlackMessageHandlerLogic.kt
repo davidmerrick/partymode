@@ -15,24 +15,21 @@ import org.koin.core.inject
 private val log = KotlinLogging.logger {}
 
 class SlackMessageHandlerLogic : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent>, KoinComponent {
-    private val helpers: HandlerHelpers by inject()
     private val bot: PartyBot by inject()
 
     override fun handleRequest(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent {
-        val requestBody = input.body
-        val message = helpers.deserializeInput(requestBody, SlackMessage::class.java)
-        log.info("Received payload: $requestBody")
+        val message = input.body as SlackMessage
         return when (message.type) {
             "url_verification" -> {
                 log.info("Received challenge")
-                val challengeMessage = helpers.deserializeInput(requestBody, SlackChallengeMessage::class.java)
+                val challengeMessage = input.body as SlackChallengeMessage
                 APIGatewayProxyResponseEvent().apply {
                     statusCode = 200
                     body = challengeMessage.challenge
                 }
             }
             "event_callback" -> {
-                val callbackMessage = helpers.deserializeInput(requestBody, SlackCallbackMessage::class.java)
+                val callbackMessage = input.body as SlackCallbackMessage
                 bot.handle(callbackMessage)
                 APIGatewayProxyResponseEvent().apply {
                     statusCode = 200

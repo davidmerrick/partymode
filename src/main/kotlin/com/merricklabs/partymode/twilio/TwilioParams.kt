@@ -16,7 +16,7 @@ data class TwilioParams(private val paramMap: Map<String, String>) {
     fun from(): String? = paramMap[FROM]
 
     private companion object {
-        val validationFields = listOf(CALL_SID, CALLER, DIGITS, FROM, TO)
+        val validationFields = listOf(CALL_SID, CALLER, FROM, TO)
         fun parseParams(rawParams: String): Map<String, String> {
             // Twilio POSTS an application/x-www-form-urlencoded string to this endpoint.
             // Build a map with it.

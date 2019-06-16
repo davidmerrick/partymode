@@ -27,7 +27,6 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
     private val twilioHelpers: TwilioHelpers by inject()
 
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
-        log.info("Received input: $input")
         val body = input["body"] as String
         log.info("Received body: $body")
 
@@ -62,7 +61,6 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
             return false
         }
 
-        val requestUrl = "https://${headers["Host"]}${headers["resourcePath"]}"
         if (!twilioHelpers.validateRequest(twilioParams, requestUrl, headers[X_TWILIO_SIGNATURE]!!)) {
             log.warn("Request did not match signature. " +
                     "Request url: $requestUrl, Signature: ${headers[X_TWILIO_SIGNATURE]}")

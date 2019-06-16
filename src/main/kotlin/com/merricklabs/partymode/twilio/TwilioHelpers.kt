@@ -11,6 +11,6 @@ class TwilioHelpers : KoinComponent {
     fun validateRequest(twilioParams: TwilioParams, requestUrl: String, twilioSignatureHeader: String): Boolean {
         val validator = RequestValidator(config.twilio.authToken)
 
-        return validator.validate(requestUrl, twilioParams.validationParams(), twilioSignatureHeader)
+        return validator.validate(requestUrl, twilioParams.paramMap, twilioSignatureHeader)
     }
 }

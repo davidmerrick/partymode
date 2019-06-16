@@ -49,8 +49,13 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
     }
 
     private fun validateRequest(twilioParams: TwilioParams, headers: Map<String, String>): Boolean {
-        if (!twilioParams.isValidPayload() || !headers.containsKey(X_TWILIO_SIGNATURE)) {
-            log.warn("Payload is invalid or headers does not contain signature key.")
+        if (!twilioParams.isValidPayload()) {
+            log.warn("Payload failed validation.")
+            return false
+        }
+
+        if (!headers.containsKey(X_TWILIO_SIGNATURE)) {
+            log.warn("Request headers does not contain Twilio signature.")
             return false
         }
 

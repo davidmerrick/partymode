@@ -6,6 +6,8 @@ import com.merricklabs.partymode.config.PartymodeConfig
 import com.merricklabs.partymode.models.ApiGatewayResponse
 import com.merricklabs.partymode.sns.SnsNotifier
 import com.merricklabs.partymode.storage.PartymodeStorage
+import com.merricklabs.partymode.twilio.TwilioHeaders.X_TWILIO_SIGNATURE
+import com.merricklabs.partymode.twilio.TwilioHelpers
 import com.merricklabs.partymode.twilio.TwilioParams
 import com.twilio.twiml.VoiceResponse
 import com.twilio.twiml.voice.Dial
@@ -22,6 +24,7 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
     private val storage: PartymodeStorage by inject()
     private val config: PartymodeConfig by inject()
     private val snsNotifier: SnsNotifier by inject()
+    private val twilioHelpers: TwilioHelpers by inject()
 
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
         val body = input["body"] as String
@@ -29,44 +32,61 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
 
         val twilioParams = TwilioParams(body)
 
+        // Validate the request
+        if (!validateRequest(twilioParams, input["headers"] as Map<String, String>)) {
+            return buildRejectResponse()
+        }
+
         twilioParams.from()?.let {
             if (it.contains(config.phone.callboxNumber) || it.contains(config.phone.myNumber)) {
                 log.info("Received a valid call from callbox or my number.")
-                return ApiGatewayResponse.build {
-                    rawBody = buildResponse().toXml()
-                    headers = mapOf("Content-Type" to "application/xml")
-                }
+                return buildResponse()
             }
         }
 
         log.info("Invalid call. Rejecting.")
-        return ApiGatewayResponse.build {
-            rawBody = buildRejectResponse().toXml()
-            headers = mapOf("Content-Type" to "application/xml")
-        }
+        return buildRejectResponse()
     }
 
-    private fun buildRejectResponse(): VoiceResponse {
-        return VoiceResponse.Builder()
+    private fun validateRequest(twilioParams: TwilioParams, headers: Map<String, String>): Boolean {
+        if (!twilioParams.isValidPayload() || !headers.containsKey(X_TWILIO_SIGNATURE)) {
+            log.warn("Payload is invalid or headers does not contain signature key.")
+            return false
+        }
+
+        val requestUrl = "https://${headers["Host"]}${headers["resourcePath"]}"
+        if (!twilioHelpers.validateRequest(twilioParams, requestUrl, headers[X_TWILIO_SIGNATURE]!!)) {
+            log.warn("Request did not match signature.")
+            return false
+        }
+
+        return true
+    }
+
+    private fun buildRejectResponse(): ApiGatewayResponse {
+        val body = VoiceResponse.Builder()
                 .reject(Reject.Builder().build())
                 .build()
+        return xmlResponse(body)
     }
 
-    private fun buildResponse(): VoiceResponse {
+    private fun buildResponse(): ApiGatewayResponse {
         val partyLease = storage.getLatestItem()
         log.info("Got lease: $partyLease")
         if (partyLease.isActive()) {
             log.info("Buzzing someone in.")
             pushNotifications()
-            return VoiceResponse.Builder()
+            val body = VoiceResponse.Builder()
                     .play(Play.Builder().digits("ww999").build())
                     .build()
+            return xmlResponse(body)
         }
 
         val number = Number.Builder(config.phone.myNumber).build()
-        return VoiceResponse.Builder()
+        val body = VoiceResponse.Builder()
                 .dial(Dial.Builder().number(number).build())
                 .build()
+        return xmlResponse(body)
     }
 
     private fun pushNotifications() {
@@ -76,8 +96,13 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
         }
     }
 
-    private companion object {
-        const val FROM_FIELD = "From"
+    companion object {
+        fun xmlResponse(body: VoiceResponse): ApiGatewayResponse {
+            return ApiGatewayResponse.build {
+                rawBody = body.toXml()
+                headers = mapOf("Content-Type" to "application/xml")
+            }
+        }
+
     }
 }
-

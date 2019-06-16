@@ -11,10 +11,8 @@ data class TwilioParams(private val paramMap: Map<String, String>) {
 
     constructor(rawParams: String) : this(parseParams(rawParams))
 
-    fun validationParams(): Map<String, String> {
-        return paramMap.filter { validationFields.contains(it.key) }
-    }
-
+    fun isValidPayload() = validationFields.all { paramMap.contains(it) }
+    fun validationParams() = paramMap.filter { validationFields.contains(it.key) }
     fun from(): String? = paramMap[FROM]
 
     private companion object {

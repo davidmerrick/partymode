@@ -8,12 +8,9 @@ import org.koin.core.inject
 class TwilioHelpers : KoinComponent {
     private val config: PartymodeConfig by inject()
 
-    fun validateRequest(twilioParams: TwilioParams, twilioSignatureHeader: String): Boolean {
+    fun validateRequest(twilioParams: TwilioParams, requestUrl: String, twilioSignatureHeader: String): Boolean {
         val validator = RequestValidator(config.twilio.authToken)
 
-        // The Twilio request URL
-        val url = "https://mycompany.com/myapp.php?foo=1&bar=2"
-
-        return validator.validate(url, twilioParams.validationParams(), twilioSignatureHeader)
+        return validator.validate(requestUrl, twilioParams.validationParams(), twilioSignatureHeader)
     }
 }

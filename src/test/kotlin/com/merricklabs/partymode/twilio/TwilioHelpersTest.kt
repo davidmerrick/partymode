@@ -18,7 +18,7 @@ class TwilioHelpersTest : PartymodeIntegrationTestBase() {
                 "From" to "+12349013030",
                 "To" to "+18005551212"
         ))
-        val didValidate = twilioHelpers.validateRequest(params, exampleHeader)
+        val didValidate = twilioHelpers.validateRequest(params, EXAMPLE_URL, exampleHeader)
         didValidate shouldBe true
     }
 
@@ -33,7 +33,11 @@ class TwilioHelpersTest : PartymodeIntegrationTestBase() {
                 "From" to "+12349013030",
                 "To" to "+18005551212"
         ))
-        val didValidate = twilioHelpers.validateRequest(params, exampleHeader)
+        val didValidate = twilioHelpers.validateRequest(params, EXAMPLE_URL, exampleHeader)
         didValidate shouldBe false
+    }
+
+    companion object {
+        const val EXAMPLE_URL = "https://mycompany.com/myapp.php?foo=1&bar=2"
     }
 }

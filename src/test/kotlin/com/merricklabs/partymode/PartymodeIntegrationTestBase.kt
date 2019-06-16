@@ -7,6 +7,7 @@ import com.merricklabs.partymode.config.SlackConfig
 import com.merricklabs.partymode.config.SnsConfig
 import com.merricklabs.partymode.config.TwilioConfig
 import com.merricklabs.partymode.storage.PartymodeStorage
+import com.merricklabs.partymode.twilio.TwilioHelpers
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.test.KoinTest

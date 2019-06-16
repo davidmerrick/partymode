@@ -50,7 +50,7 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
 
     private fun validateRequest(twilioParams: TwilioParams, headers: Map<String, String>): Boolean {
         if (!twilioParams.isValidPayload()) {
-            log.warn("Payload failed validation.")
+            log.warn("Payload failed validation. Validation fields present: ${twilioParams.validationParams()}")
             return false
         }
 

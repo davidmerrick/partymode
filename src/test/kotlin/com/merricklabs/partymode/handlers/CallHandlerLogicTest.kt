@@ -1,6 +1,8 @@
 package com.merricklabs.partymode.handlers
 
 import com.amazonaws.services.lambda.runtime.Context
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent.ProxyRequestContext
 import com.merricklabs.partymode.PartymodeIntegrationTestBase
 import com.merricklabs.partymode.models.PartyLease
 import com.merricklabs.partymode.storage.PartymodeStorage
@@ -23,18 +25,17 @@ class CallHandlerLogicTest : PartymodeIntegrationTestBase() {
     private val partymodeStorage: PartymodeStorage by inject()
     private val callHandlerLogic: CallHandlerLogic by inject()
 
-    private val mockInput = mapOf(
-            "headers" to mapOf(X_TWILIO_SIGNATURE to "12345"),
-            "requestContext" to mapOf(
-                    "domainName" to "foo",
-                    "path" to "/bar/baz"
-            ),
-            "body" to "From=${URLEncoder.encode(CALLBOX_NUMBER, "UTF-8")}" +
-                    "&To=12345" +
-                    "&CallSid=12345" +
-                    "&Caller=12345" +
-                    "&Digits=12345"
-    )
+    private val mockInput = APIGatewayProxyRequestEvent().apply {
+        headers = mapOf(X_TWILIO_SIGNATURE to "12345", "HOST" to "foo")
+        requestContext = ProxyRequestContext()
+                .withPath("/bar/baz")
+        body = "From=${URLEncoder.encode(CALLBOX_NUMBER, "UTF-8")}" +
+                "&To=12345" +
+                "&CallSid=12345" +
+                "&Caller=12345" +
+                "&Digits=12345"
+    }
+
     private val mockContext = mock(Context::class.java)
 
     @BeforeMethod
@@ -69,18 +70,16 @@ class CallHandlerLogicTest : PartymodeIntegrationTestBase() {
     fun `If call is not from callbox number, reject it`() {
         initMockLease(true)
         val invalidNumber = "9999999999"
-        val mockInput = mapOf(
-                "headers" to mapOf(X_TWILIO_SIGNATURE to "12345"),
-                "requestContext" to mapOf(
-                        "domainName" to "foo",
-                        "path" to "/bar/baz"
-                ),
-                "body" to "From=${URLEncoder.encode(invalidNumber, "UTF-8")}" +
-                        "&To=12345" +
-                        "&CallSid=12345" +
-                        "&Caller=12345" +
-                        "&Digits=12345"
-        )
+        val mockInput = APIGatewayProxyRequestEvent().apply {
+            headers = mapOf(X_TWILIO_SIGNATURE to "12345", "HOST" to "foo")
+            requestContext = ProxyRequestContext()
+                    .withPath("/bar/baz")
+            body = "From=${URLEncoder.encode(invalidNumber, "UTF-8")}" +
+                    "&To=12345" +
+                    "&CallSid=12345" +
+                    "&Caller=12345" +
+                    "&Digits=12345"
+        }
         val response = callHandlerLogic.handleRequest(mockInput, mockContext)
         response.body!!.toLowerCase() shouldHave contain("reject")
     }

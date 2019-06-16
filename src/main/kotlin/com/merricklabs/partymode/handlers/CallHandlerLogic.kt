@@ -2,8 +2,9 @@ package com.merricklabs.partymode.handlers
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.merricklabs.partymode.config.PartymodeConfig
-import com.merricklabs.partymode.models.ApiGatewayResponse
 import com.merricklabs.partymode.sns.SnsNotifier
 import com.merricklabs.partymode.storage.PartymodeStorage
 import com.merricklabs.partymode.twilio.TwilioHeaders.X_TWILIO_SIGNATURE
@@ -17,24 +18,23 @@ import com.twilio.twiml.voice.Reject
 import mu.KotlinLogging
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import java.lang.RuntimeException
 
 private val log = KotlinLogging.logger {}
 
-class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, KoinComponent {
+class CallHandlerLogic : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent>, KoinComponent {
     private val storage: PartymodeStorage by inject()
     private val config: PartymodeConfig by inject()
     private val snsNotifier: SnsNotifier by inject()
     private val twilioHelpers: TwilioHelpers by inject()
 
-    override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
-        val body = input["body"] as String
+    override fun handleRequest(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent {
+        val body = input.body
         log.info("Received body: $body")
 
         val twilioParams = TwilioParams(body)
 
         // Validate the request
-        if (!validateRequest(twilioParams, getRequestUrl(input), getHeaders(input))) {
+        if (!validateRequest(twilioParams, input.getRequestUrl(), input.headers)) {
             return buildRejectResponse()
         }
 
@@ -47,13 +47,6 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
 
         log.info("Invalid call. Rejecting.")
         return buildRejectResponse()
-    }
-
-    private fun getHeaders(input: Map<String, Any>) = input["headers"] as Map<String, String>
-
-    private fun getRequestUrl(input: Map<String, Any>): String {
-        val requestContext = input["requestContext"] as Map<String, String>
-        return "https://${requestContext["domainName"]}${requestContext["path"]}"
     }
 
     private fun validateRequest(twilioParams: TwilioParams, requestUrl: String, headers: Map<String, String>): Boolean {
@@ -71,14 +64,14 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
         return true
     }
 
-    private fun buildRejectResponse(): ApiGatewayResponse {
+    private fun buildRejectResponse(): APIGatewayProxyResponseEvent {
         val body = VoiceResponse.Builder()
                 .reject(Reject.Builder().build())
                 .build()
         return xmlResponse(body)
     }
 
-    private fun buildResponse(): ApiGatewayResponse {
+    private fun buildResponse(): APIGatewayProxyResponseEvent {
         val partyLease = storage.getLatestItem()
         log.info("Got lease: $partyLease")
         if (partyLease.isActive()) {
@@ -105,12 +98,16 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
     }
 
     companion object {
-        fun xmlResponse(body: VoiceResponse): ApiGatewayResponse {
-            return ApiGatewayResponse.build {
-                rawBody = body.toXml()
+        fun xmlResponse(voiceResponse: VoiceResponse): APIGatewayProxyResponseEvent {
+            return APIGatewayProxyResponseEvent().apply {
+                statusCode = 200
+                body = voiceResponse.toXml()
                 headers = mapOf("Content-Type" to "application/xml")
             }
         }
-
     }
+}
+
+fun APIGatewayProxyRequestEvent.getRequestUrl(): String {
+    return "https://${this.headers["Host"]}${this.requestContext.path}"
 }

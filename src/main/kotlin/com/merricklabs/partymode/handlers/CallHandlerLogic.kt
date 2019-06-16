@@ -27,6 +27,7 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
     private val twilioHelpers: TwilioHelpers by inject()
 
     override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
+        log.info("Received input: $input")
         val body = input["body"] as String
         log.info("Received body: $body")
 

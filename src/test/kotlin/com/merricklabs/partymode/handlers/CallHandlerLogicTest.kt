@@ -27,7 +27,7 @@ class CallHandlerLogicTest : PartymodeIntegrationTestBase() {
             "headers" to mapOf(X_TWILIO_SIGNATURE to "12345"),
             "requestContext" to mapOf(
                     "domainName" to "foo",
-                    "resourcePath" to "/bar/baz"
+                    "path" to "/bar/baz"
             ),
             "body" to "From=${URLEncoder.encode(CALLBOX_NUMBER, "UTF-8")}" +
                     "&To=12345" +
@@ -73,7 +73,7 @@ class CallHandlerLogicTest : PartymodeIntegrationTestBase() {
                 "headers" to mapOf(X_TWILIO_SIGNATURE to "12345"),
                 "requestContext" to mapOf(
                         "domainName" to "foo",
-                        "resourcePath" to "/bar/baz"
+                        "path" to "/bar/baz"
                 ),
                 "body" to "From=${URLEncoder.encode(invalidNumber, "UTF-8")}" +
                         "&To=12345" +

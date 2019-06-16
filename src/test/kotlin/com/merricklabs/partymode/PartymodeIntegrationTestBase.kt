@@ -17,6 +17,7 @@ import org.mockito.Mockito
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 
+@Suppress("UNCHECKED_CAST")
 open class PartymodeIntegrationTestBase : KoinTest {
 
     // Workaround for Mockito in Kotlin. See https://medium.com/@elye.project/befriending-kotlin-and-mockito-1c2e7b0ef791

@@ -12,7 +12,7 @@ data class TwilioParams(private val paramMap: Map<String, String>) {
     constructor(rawParams: String) : this(parseParams(rawParams))
 
     fun isValidPayload() = validationFields.all { paramMap.contains(it) }
-    fun validationParams() = paramMap.filter { validationFields.contains(it.key) }
+    fun validationParams() = paramMap.filter { validationFields.contains(it.key) || it.key == DIGITS }
     fun from(): String? = paramMap[FROM]
 
     private companion object {

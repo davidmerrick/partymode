@@ -3,16 +3,18 @@ package com.merricklabs.partymode.handlers
 import com.amazonaws.services.lambda.runtime.Context
 import com.merricklabs.partymode.PartymodeIntegrationTestBase
 import com.merricklabs.partymode.models.PartyLease
+import com.merricklabs.partymode.storage.PartymodeStorage
 import io.kotlintest.matchers.string.contain
 import io.kotlintest.shouldHave
 import io.kotlintest.shouldNotHave
-import org.koin.core.inject
+import org.koin.test.inject
 import org.mockito.Mockito
 import org.testng.annotations.Test
 import java.net.URLEncoder
 
 class CallHandlerLogicTest: PartymodeIntegrationTestBase() {
 
+    private val partymodeStorage: PartymodeStorage by inject()
     private val callHandlerLogic: CallHandlerLogic by inject()
     private val mockInput = mapOf("body" to "From=${URLEncoder.encode(CALLBOX_NUMBER, "UTF-8")}")
     private val mockContext = Mockito.mock(Context::class.java)

@@ -10,7 +10,6 @@ import com.merricklabs.partymode.storage.PartymodeStorage
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.test.KoinTest
-import org.koin.test.inject
 import org.koin.test.mock.declareMock
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito
@@ -26,10 +25,9 @@ open class PartymodeIntegrationTestBase : KoinTest {
     }
 
     private fun <T> uninitialized(): T = null as T
-    val partymodeStorage: PartymodeStorage by inject()
 
     @BeforeMethod
-    fun beforeMethod() {
+    protected fun beforeMethod() {
         val mockPhone = Mockito.mock(PhoneConfig::class.java)
         val mockDynamo = Mockito.mock(DynamoDbConfig::class.java)
         val mockSlack = Mockito.mock(SlackConfig::class.java)
@@ -54,7 +52,7 @@ open class PartymodeIntegrationTestBase : KoinTest {
     }
 
     @AfterMethod
-    fun afterMethod() {
+    protected fun afterMethod() {
         stopKoin()
     }
 

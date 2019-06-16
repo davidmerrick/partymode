@@ -6,6 +6,7 @@ import com.merricklabs.partymode.config.PartymodeConfig
 import com.merricklabs.partymode.models.ApiGatewayResponse
 import com.merricklabs.partymode.sns.SnsNotifier
 import com.merricklabs.partymode.storage.PartymodeStorage
+import com.merricklabs.partymode.twilio.TwilioParams
 import com.twilio.twiml.VoiceResponse
 import com.twilio.twiml.voice.Dial
 import com.twilio.twiml.voice.Number
@@ -14,7 +15,6 @@ import com.twilio.twiml.voice.Reject
 import mu.KotlinLogging
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import java.net.URLDecoder
 
 private val log = KotlinLogging.logger {}
 
@@ -27,15 +27,9 @@ class CallHandlerLogic : RequestHandler<Map<String, Any>, ApiGatewayResponse>, K
         val body = input["body"] as String
         log.info("Received input: $body")
 
-        // Twilio POSTS an application/x-www-form-urlencoded string to this endpoint.
-        // Build a map with it.
-        val callParams = URLDecoder.decode(body, "UTF-8")
-                .split("&")
-                .map { it.split("=") }
-                .map { it[0] to it[1] }
-                .toMap()
+        val twilioParams = TwilioParams(body)
 
-        callParams[FROM_FIELD]?.let {
+        twilioParams.from()?.let {
             if (it.contains(config.phone.callboxNumber) || it.contains(config.phone.myNumber)) {
                 log.info("Received a valid call from callbox or my number.")
                 return ApiGatewayResponse.build {

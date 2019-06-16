@@ -5,4 +5,5 @@ interface PartymodeConfig {
     val sns: SnsConfig
     val phone: PhoneConfig
     val slack: SlackConfig
+    val twilio: TwilioConfig
 }

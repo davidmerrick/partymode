@@ -3,21 +3,19 @@ package com.merricklabs.partymode.bots
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.merricklabs.echobot.slack.SlackBotMessage
 import com.merricklabs.echobot.slack.SlackCallbackMessage
-import com.merricklabs.partymode.slack.SlackNotifier
 import com.merricklabs.partymode.storage.PartymodeStorage
 import mu.KotlinLogging
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 private val log = KotlinLogging.logger {}
 
 class PartyBot : SlackBot() {
     private val storage: PartymodeStorage by inject()
     private val mapper: ObjectMapper by inject()
-    private val slackNotifier: SlackNotifier by inject()
 
     override fun handle(message: SlackCallbackMessage) {
         if (!shouldHandle(message)) {

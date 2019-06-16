@@ -8,8 +8,8 @@ import com.merricklabs.echobot.slack.SlackMessage
 import com.merricklabs.partymode.bots.PartyBot
 import com.merricklabs.partymode.models.ApiGatewayResponse
 import mu.KotlinLogging
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 private val log = KotlinLogging.logger {}
 

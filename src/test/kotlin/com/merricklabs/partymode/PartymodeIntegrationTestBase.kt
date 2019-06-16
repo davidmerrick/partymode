@@ -1,15 +1,18 @@
 package com.merricklabs.partymode
 
+import com.merricklabs.partymode.config.DynamoDbConfig
 import com.merricklabs.partymode.config.PartymodeConfig
-import com.merricklabs.partymode.config.PartymodeConfigImpl
+import com.merricklabs.partymode.config.PhoneConfig
+import com.merricklabs.partymode.config.SlackConfig
+import com.merricklabs.partymode.config.SnsConfig
+import com.merricklabs.partymode.config.TwilioConfig
 import com.merricklabs.partymode.storage.PartymodeStorage
-import com.merricklabs.partymode.testutil.PartymodeTestModule
-import com.merricklabs.partymode.testutil.TestConstants.INTEGRATION_GROUP
-import org.koin.standalone.StandAloneContext.loadKoinModules
-import org.koin.standalone.StandAloneContext.stopKoin
-import org.koin.standalone.inject
+import com.merricklabs.partymode.twilio.TwilioHelpers
+import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
 import org.koin.test.KoinTest
-import org.koin.test.declareMock
+import org.koin.test.mock.declareMock
+import org.mockito.BDDMockito.given
 import org.mockito.Mockito
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
@@ -23,16 +26,40 @@ open class PartymodeIntegrationTestBase : KoinTest {
     }
 
     private fun <T> uninitialized(): T = null as T
-    val partymodeStorage: PartymodeStorage by inject()
 
-    @BeforeMethod(groups = [INTEGRATION_GROUP])
-    fun beforeMethod() {
-        loadKoinModules(PartymodeTestModule)
+    @BeforeMethod
+    protected fun beforeMethod() {
+        val mockPhone = Mockito.mock(PhoneConfig::class.java)
+        val mockDynamo = Mockito.mock(DynamoDbConfig::class.java)
+        val mockSlack = Mockito.mock(SlackConfig::class.java)
+        val mockSns = Mockito.mock(SnsConfig::class.java)
+        val mockTwilio = Mockito.mock(TwilioConfig::class.java)
+
+        Mockito.`when`(mockPhone.myNumber).thenReturn(MY_NUMBER)
+        Mockito.`when`(mockPhone.callboxNumber).thenReturn(CALLBOX_NUMBER)
+        Mockito.`when`(mockTwilio.authToken).thenReturn(TWILIO_AUTH_TOKEN)
+
+        startKoin {
+            modules(PartymodeModule)
+        }
         declareMock<PartymodeStorage>()
+        declareMock<PartymodeConfig> {
+            given(this.phone).willReturn(mockPhone)
+            given(this.twilio).willReturn(mockTwilio)
+            given(this.dynamoDb).willReturn(mockDynamo)
+            given(this.slack).willReturn(mockSlack)
+            given(this.sns).willReturn(mockSns)
+        }
     }
 
-    @AfterMethod(groups = [INTEGRATION_GROUP])
-    fun afterMethod() {
+    @AfterMethod
+    protected fun afterMethod() {
         stopKoin()
+    }
+
+    companion object {
+        const val MY_NUMBER = "8675309"
+        const val CALLBOX_NUMBER = "8675309"
+        const val TWILIO_AUTH_TOKEN = "12345"
     }
 }

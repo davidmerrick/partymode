@@ -26,11 +26,11 @@ object Versions {
 
     const val okhttp: String = "3.14.1" // available: "3.14.2"
 
-    const val twilio: String = "7.17.0" // available: "7.38.1"
+    const val twilio: String = "7.38.1"
 
     const val de_fayard_buildsrcversions_gradle_plugin: String = "0.3.2" 
 
-    const val kotlin_logging: String = "1.6.10" // available: "1.6.26"
+    const val kotlin_logging: String = "1.6.26"
 
     const val kotlintest_runner_junit5: String = "3.1.7" // available: "3.3.2"
 
@@ -38,7 +38,7 @@ object Versions {
 
     const val org_jetbrains_kotlin: String = "1.3.31" 
 
-    const val org_koin: String = "1.0.1" // available: "2.0.1"
+    const val org_koin: String = "2.0.1"
 
     const val slf4j_api: String = "1.7.25" // available: "1.7.26"
 

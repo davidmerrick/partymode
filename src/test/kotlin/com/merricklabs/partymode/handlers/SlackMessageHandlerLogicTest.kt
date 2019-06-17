@@ -16,7 +16,6 @@ class SlackMessageHandlerLogicTest : PartymodeIntegrationTestBase() {
 
     private val mockContext = Mockito.mock(Context::class.java)
     private val slackMessageHandlerLogic: SlackMessageHandlerLogic by inject()
-    private val mapper: ObjectMapper by inject()
 
     @Test
     fun `Should return challenge on challenge request`() {

@@ -1,5 +1,6 @@
 package com.merricklabs.partymode
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.merricklabs.partymode.config.DynamoDbConfig
 import com.merricklabs.partymode.config.PartymodeConfig
 import com.merricklabs.partymode.config.PhoneConfig
@@ -8,9 +9,11 @@ import com.merricklabs.partymode.config.SnsConfig
 import com.merricklabs.partymode.config.TwilioConfig
 import com.merricklabs.partymode.storage.PartymodeStorage
 import com.merricklabs.partymode.twilio.TwilioHelpers
+import com.merricklabs.partymode.util.PartymodeObjectMapper
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.test.KoinTest
+import org.koin.test.inject
 import org.koin.test.mock.declareMock
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito

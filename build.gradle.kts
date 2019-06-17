@@ -15,6 +15,7 @@ dependencies {
     implementation(Libs.twilio)
     implementation(Libs.okhttp)
     implementation(Libs.kotlin_stdlib_jdk8)
+    implementation(Libs.kotlin_reflect)
     implementation(Libs.slf4j_api)
     implementation(Libs.slf4j_jdk14)
     implementation(Libs.kotlin_logging)

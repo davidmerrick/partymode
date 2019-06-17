@@ -16,6 +16,7 @@ import com.twilio.twiml.voice.Number
 import com.twilio.twiml.voice.Play
 import com.twilio.twiml.voice.Reject
 import mu.KotlinLogging
+import org.apache.http.HttpStatus
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -28,16 +29,16 @@ class CallHandlerLogic : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayP
     private val twilioHelpers: TwilioHelpers by inject()
 
     override fun handleRequest(request: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent {
+        if (!validateRequest(request)) {
+            return APIGatewayProxyResponseEvent().apply {
+                statusCode = HttpStatus.SC_BAD_REQUEST
+            }
+        }
+
         val body = request.body
         log.info("Received body: $body")
 
         val twilioParams = TwilioParams(body)
-
-        // Validate the request
-        if (!validateRequest(twilioParams, request.getRequestUrl(), request.headers)) {
-            return buildRejectResponse()
-        }
-
         twilioParams.from()?.let {
             if (it.contains(config.phone.callboxNumber) || it.contains(config.phone.myNumber)) {
                 log.info("Received a valid call from callbox or my number.")
@@ -49,12 +50,15 @@ class CallHandlerLogic : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayP
         return buildRejectResponse()
     }
 
-    private fun validateRequest(twilioParams: TwilioParams, requestUrl: String, headers: Map<String, String>): Boolean {
+    private fun validateRequest(request: APIGatewayProxyRequestEvent): Boolean {
+        val headers = request.headers
         if (!headers.containsKey(X_TWILIO_SIGNATURE)) {
             log.warn("Request headers does not contain Twilio signature.")
             return false
         }
 
+        val twilioParams = TwilioParams(request.body)
+        val requestUrl = request.getRequestUrl()
         if (!twilioHelpers.validateRequest(twilioParams, requestUrl, headers[X_TWILIO_SIGNATURE]!!)) {
             log.warn("Request did not match signature. " +
                     "Request url: $requestUrl, Signature: ${headers[X_TWILIO_SIGNATURE]}")
@@ -100,7 +104,7 @@ class CallHandlerLogic : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayP
     companion object {
         fun xmlResponse(voiceResponse: VoiceResponse): APIGatewayProxyResponseEvent {
             return APIGatewayProxyResponseEvent().apply {
-                statusCode = 200
+                statusCode = HttpStatus.SC_OK
                 body = voiceResponse.toXml()
                 headers = mapOf("Content-Type" to "application/xml")
             }

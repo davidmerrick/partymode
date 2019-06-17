@@ -9,8 +9,10 @@ import com.merricklabs.partymode.storage.PartymodeStorage
 import com.merricklabs.partymode.twilio.TwilioHeaders.X_TWILIO_SIGNATURE
 import com.merricklabs.partymode.twilio.TwilioHelpers
 import io.kotlintest.matchers.string.contain
+import io.kotlintest.shouldBe
 import io.kotlintest.shouldHave
 import io.kotlintest.shouldNotHave
+import org.apache.http.HttpStatus
 import org.koin.test.inject
 import org.koin.test.mock.declareMock
 import org.mockito.BDDMockito.given
@@ -82,6 +84,18 @@ class CallHandlerLogicTest : PartymodeIntegrationTestBase() {
         }
         val response = callHandlerLogic.handleRequest(mockInput, mockContext)
         response.body!!.toLowerCase() shouldHave contain("reject")
+    }
+
+    @Test
+    fun `If request doesn't have header, reject it`() {
+        initMockLease(true)
+        val mockInput = APIGatewayProxyRequestEvent().apply {
+            headers = emptyMap()
+            requestContext = ProxyRequestContext()
+                    .withPath("/bar/baz")
+        }
+        val response = callHandlerLogic.handleRequest(mockInput, mockContext)
+        response.statusCode shouldBe HttpStatus.SC_BAD_REQUEST
     }
 
     private fun initMockLease(isActive: Boolean) {

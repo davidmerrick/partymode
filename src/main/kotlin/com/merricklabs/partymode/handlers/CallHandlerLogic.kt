@@ -27,14 +27,14 @@ class CallHandlerLogic : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayP
     private val snsNotifier: SnsNotifier by inject()
     private val twilioHelpers: TwilioHelpers by inject()
 
-    override fun handleRequest(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent {
-        val body = input.body
+    override fun handleRequest(request: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent {
+        val body = request.body
         log.info("Received body: $body")
 
         val twilioParams = TwilioParams(body)
 
         // Validate the request
-        if (!validateRequest(twilioParams, input.getRequestUrl(), input.headers)) {
+        if (!validateRequest(twilioParams, request.getRequestUrl(), request.headers)) {
             return buildRejectResponse()
         }
 

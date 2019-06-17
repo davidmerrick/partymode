@@ -19,19 +19,20 @@ class SlackMessageHandlerLogic : RequestHandler<APIGatewayProxyRequestEvent, API
     private val bot: PartyBot by inject()
     private val mapper: ObjectMapper by inject()
 
-    override fun handleRequest(input: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent {
-        val message = mapper.convertValue(input.body, SlackMessage::class.java)
+    override fun handleRequest(request: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent {
+        val requestBody = request.body as Any
+        val message = mapper.convertValue(requestBody, SlackMessage::class.java)
         return when (message.type) {
             "url_verification" -> {
                 log.info("Received challenge")
-                val challengeMessage = mapper.convertValue(input.body, SlackChallengeMessage::class.java)
+                val challengeMessage = mapper.convertValue(request.body, SlackChallengeMessage::class.java)
                 APIGatewayProxyResponseEvent().apply {
                     statusCode = 200
                     body = challengeMessage.challenge
                 }
             }
             "event_callback" -> {
-                val callbackMessage = mapper.convertValue(input.body, SlackCallbackMessage::class.java)
+                val callbackMessage = mapper.convertValue(request.body, SlackCallbackMessage::class.java)
                 bot.handle(callbackMessage)
                 APIGatewayProxyResponseEvent().apply {
                     statusCode = 200

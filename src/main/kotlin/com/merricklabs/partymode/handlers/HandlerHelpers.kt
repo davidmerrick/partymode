@@ -1,5 +1,6 @@
 package com.merricklabs.partymode.handlers
 
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -13,5 +14,15 @@ class HandlerHelpers : KoinComponent {
         mapper.readValue(body, clazz)
     } else {
         mapper.convertValue(body, clazz)
+    }
+
+    fun okResponse() = APIGatewayProxyResponseEvent().apply {
+        statusCode = 200
+        body = "ok"
+    }
+
+    fun okResponse(responseBody: String) = APIGatewayProxyResponseEvent().apply {
+        statusCode = 200
+        body = responseBody
     }
 }

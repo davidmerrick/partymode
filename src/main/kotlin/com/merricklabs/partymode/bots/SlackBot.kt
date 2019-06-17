@@ -1,7 +1,7 @@
 package com.merricklabs.partymode.bots
 
-import com.merricklabs.echobot.slack.SlackCallbackMessage
 import com.merricklabs.partymode.config.PartymodeConfig
+import com.merricklabs.partymode.slack.SlackCallbackMessage
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

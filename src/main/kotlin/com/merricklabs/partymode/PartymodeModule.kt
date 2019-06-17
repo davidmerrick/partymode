@@ -21,6 +21,6 @@ val PartymodeModule = module {
     single { PartyBot() }
     single { PartymodeObjectMapper() as ObjectMapper }
     single { SnsNotifier() }
-    single { HandlerHelpers() }
     single { TwilioHelpers() }
+    single { HandlerHelpers() }
 }

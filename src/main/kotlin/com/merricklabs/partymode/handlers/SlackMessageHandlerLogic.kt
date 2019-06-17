@@ -2,47 +2,38 @@ package com.merricklabs.partymode.handlers
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.merricklabs.echobot.slack.SlackCallbackMessage
-import com.merricklabs.echobot.slack.SlackChallengeMessage
-import com.merricklabs.echobot.slack.SlackMessage
 import com.merricklabs.partymode.bots.PartyBot
+import com.merricklabs.partymode.slack.SlackCallbackMessage
+import com.merricklabs.partymode.slack.SlackChallengeMessage
+import com.merricklabs.partymode.slack.SlackMessage
+import com.merricklabs.partymode.slack.SlackMessageType.EVENT_CALLBACK
+import com.merricklabs.partymode.slack.SlackMessageType.URL_VERIFICATION
 import mu.KotlinLogging
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 private val log = KotlinLogging.logger {}
 
-class SlackMessageHandlerLogic : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent>, KoinComponent {
+class SlackMessageHandlerLogic : RequestHandler<Map<String, Any>, APIGatewayProxyResponseEvent>, KoinComponent {
     private val bot: PartyBot by inject()
-    private val mapper: ObjectMapper by inject()
+    private val helpers: HandlerHelpers by inject()
 
-    override fun handleRequest(request: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent {
-        val requestBody = request.body as Any
-        val message = mapper.convertValue(requestBody, SlackMessage::class.java)
+    override fun handleRequest(request: Map<String, Any>, context: Context): APIGatewayProxyResponseEvent {
+        val requestBody = request["body"]
+        val message = helpers.deserializeInput(requestBody, SlackMessage::class.java)
         return when (message.type) {
-            "url_verification" -> {
+            URL_VERIFICATION -> {
                 log.info("Received challenge")
-                val challengeMessage = mapper.convertValue(request.body, SlackChallengeMessage::class.java)
-                APIGatewayProxyResponseEvent().apply {
-                    statusCode = 200
-                    body = challengeMessage.challenge
-                }
+                val challengeMessage = helpers.deserializeInput(requestBody, SlackChallengeMessage::class.java)
+                helpers.okResponse(challengeMessage.challenge)
             }
-            "event_callback" -> {
-                val callbackMessage = mapper.convertValue(request.body, SlackCallbackMessage::class.java)
+            EVENT_CALLBACK -> {
+                val callbackMessage = helpers.deserializeInput(requestBody, SlackCallbackMessage::class.java)
                 bot.handle(callbackMessage)
-                APIGatewayProxyResponseEvent().apply {
-                    statusCode = 200
-                    body = "ok"
-                }
+                helpers.okResponse()
             }
-            else -> APIGatewayProxyResponseEvent().apply {
-                statusCode = 200
-                body = "ok"
-            }
+            else -> helpers.okResponse()
         }
     }
 }

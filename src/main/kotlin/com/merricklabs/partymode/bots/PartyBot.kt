@@ -1,8 +1,8 @@
 package com.merricklabs.partymode.bots
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.merricklabs.echobot.slack.SlackBotMessage
-import com.merricklabs.echobot.slack.SlackCallbackMessage
+import com.merricklabs.partymode.slack.SlackBotMessage
+import com.merricklabs.partymode.slack.SlackCallbackMessage
 import com.merricklabs.partymode.storage.PartymodeStorage
 import mu.KotlinLogging
 import okhttp3.MediaType

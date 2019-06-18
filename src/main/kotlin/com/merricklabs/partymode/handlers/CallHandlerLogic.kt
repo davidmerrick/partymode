@@ -7,7 +7,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.merricklabs.partymode.config.PartymodeConfig
 import com.merricklabs.partymode.sns.SnsNotifier
 import com.merricklabs.partymode.storage.PartymodeStorage
-import com.merricklabs.partymode.twilio.TwilioHeaders.X_TWILIO_SIGNATURE
+import com.merricklabs.partymode.twilio.TwilioHeaders.TWILIO_SIGNATURE
 import com.merricklabs.partymode.twilio.TwilioHelpers
 import com.merricklabs.partymode.twilio.TwilioParams
 import com.twilio.twiml.VoiceResponse
@@ -52,16 +52,16 @@ class CallHandlerLogic : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayP
 
     private fun validateRequest(request: APIGatewayProxyRequestEvent): Boolean {
         val headers = request.headers
-        if (!headers.containsKey(X_TWILIO_SIGNATURE)) {
+        if (!headers.containsKey(TWILIO_SIGNATURE)) {
             log.warn("Request headers does not contain Twilio signature.")
             return false
         }
 
         val twilioParams = TwilioParams(request.body)
         val requestUrl = request.getRequestUrl()
-        if (!twilioHelpers.validateRequest(twilioParams, requestUrl, headers[X_TWILIO_SIGNATURE]!!)) {
+        if (!twilioHelpers.validateRequest(twilioParams, requestUrl, headers[TWILIO_SIGNATURE]!!)) {
             log.warn("Request did not match signature. " +
-                    "Request url: $requestUrl, Signature: ${headers[X_TWILIO_SIGNATURE]}")
+                    "Request url: $requestUrl, Signature: ${headers[TWILIO_SIGNATURE]}")
             return false
         }
 

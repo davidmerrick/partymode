@@ -1,6 +1,5 @@
 package com.merricklabs.partymode
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.merricklabs.partymode.config.DynamoDbConfig
 import com.merricklabs.partymode.config.PartymodeConfig
 import com.merricklabs.partymode.config.PhoneConfig
@@ -8,17 +7,14 @@ import com.merricklabs.partymode.config.SlackConfig
 import com.merricklabs.partymode.config.SnsConfig
 import com.merricklabs.partymode.config.TwilioConfig
 import com.merricklabs.partymode.storage.PartymodeStorage
-import com.merricklabs.partymode.twilio.TwilioHelpers
-import com.merricklabs.partymode.util.PartymodeObjectMapper
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.test.KoinTest
-import org.koin.test.inject
 import org.koin.test.mock.declareMock
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito
-import org.testng.annotations.AfterMethod
-import org.testng.annotations.BeforeMethod
+import org.testng.annotations.AfterClass
+import org.testng.annotations.BeforeClass
 
 @Suppress("UNCHECKED_CAST")
 open class PartymodeIntegrationTestBase : KoinTest {
@@ -31,7 +27,7 @@ open class PartymodeIntegrationTestBase : KoinTest {
 
     private fun <T> uninitialized(): T = null as T
 
-    @BeforeMethod
+    @BeforeClass
     protected fun beforeMethod() {
         val mockPhone = Mockito.mock(PhoneConfig::class.java)
         val mockDynamo = Mockito.mock(DynamoDbConfig::class.java)
@@ -56,7 +52,7 @@ open class PartymodeIntegrationTestBase : KoinTest {
         }
     }
 
-    @AfterMethod
+    @AfterClass
     protected fun afterMethod() {
         stopKoin()
     }

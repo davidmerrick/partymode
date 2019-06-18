@@ -6,7 +6,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent.
 import com.merricklabs.partymode.PartymodeIntegrationTestBase
 import com.merricklabs.partymode.models.PartyLease
 import com.merricklabs.partymode.storage.PartymodeStorage
-import com.merricklabs.partymode.twilio.TwilioHeaders.X_TWILIO_SIGNATURE
+import com.merricklabs.partymode.twilio.TwilioHeaders.TWILIO_SIGNATURE
 import com.merricklabs.partymode.twilio.TwilioHelpers
 import io.kotlintest.matchers.string.contain
 import io.kotlintest.shouldBe
@@ -28,7 +28,7 @@ class CallHandlerLogicTest : PartymodeIntegrationTestBase() {
     private val callHandlerLogic: CallHandlerLogic by inject()
 
     private val mockInput = APIGatewayProxyRequestEvent().apply {
-        headers = mapOf(X_TWILIO_SIGNATURE to "12345", "HOST" to "foo")
+        headers = mapOf(TWILIO_SIGNATURE to "12345", "HOST" to "foo")
         requestContext = ProxyRequestContext()
                 .withPath("/bar/baz")
         body = "From=${URLEncoder.encode(CALLBOX_NUMBER, "UTF-8")}" +
@@ -73,7 +73,7 @@ class CallHandlerLogicTest : PartymodeIntegrationTestBase() {
         initMockLease(true)
         val invalidNumber = "9999999999"
         val mockInput = APIGatewayProxyRequestEvent().apply {
-            headers = mapOf(X_TWILIO_SIGNATURE to "12345", "HOST" to "foo")
+            headers = mapOf(TWILIO_SIGNATURE to "12345", "HOST" to "foo")
             requestContext = ProxyRequestContext()
                     .withPath("/bar/baz")
             body = "From=${URLEncoder.encode(invalidNumber, "UTF-8")}" +

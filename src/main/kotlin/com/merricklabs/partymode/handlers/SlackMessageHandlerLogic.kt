@@ -6,10 +6,12 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.merricklabs.partymode.bots.PartyBot
 import com.merricklabs.partymode.slack.SlackCallbackMessage
 import com.merricklabs.partymode.slack.SlackChallengeMessage
+import com.merricklabs.partymode.slack.SlackHeaders.SLACK_SIGNATURE
 import com.merricklabs.partymode.slack.SlackMessage
 import com.merricklabs.partymode.slack.SlackMessageType.EVENT_CALLBACK
 import com.merricklabs.partymode.slack.SlackMessageType.URL_VERIFICATION
 import mu.KotlinLogging
+import org.apache.http.HttpStatus
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -20,6 +22,12 @@ class SlackMessageHandlerLogic : RequestHandler<Map<String, Any>, APIGatewayProx
     private val helpers: HandlerHelpers by inject()
 
     override fun handleRequest(request: Map<String, Any>, context: Context): APIGatewayProxyResponseEvent {
+        if(!validateRequest(request)){
+            return APIGatewayProxyResponseEvent().apply {
+                statusCode = HttpStatus.SC_BAD_REQUEST
+            }
+        }
+
         val requestBody = request["body"]
         val message = helpers.deserializeInput(requestBody, SlackMessage::class.java)
         return when (message.type) {
@@ -35,6 +43,16 @@ class SlackMessageHandlerLogic : RequestHandler<Map<String, Any>, APIGatewayProx
             }
             else -> helpers.okResponse()
         }
+    }
+
+    private fun validateRequest(request: Map<String, Any>): Boolean {
+        val headers = request["headers"] as Map<String, String>
+        if(!headers.containsKey(SLACK_SIGNATURE)){
+            log.warn("Headers do not contain Slack signature")
+            return false
+        }
+
+        return true
     }
 }
 

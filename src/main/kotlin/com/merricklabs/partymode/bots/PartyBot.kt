@@ -34,6 +34,10 @@ class PartyBot : SlackBot() {
                 val suffix = if (numHours > 1) "hours" else "hour"
                 sendReply(message, "partymode enabled for $numHours $suffix")
             }
+            in Regex(".*pm disable$") -> {
+                storage.saveTimeToDb(0)
+                sendReply(message, "partymode disabled")
+            }
             else -> sendReply(message, HELP_TEXT)
         }
     }

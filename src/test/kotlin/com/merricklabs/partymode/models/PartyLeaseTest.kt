@@ -24,4 +24,10 @@ class PartyLeaseTest {
         val partyLease = PartyLease.default()
         partyLease.isActive() shouldBe false
     }
+
+    @Test(groups = [INTEGRATION_GROUP])
+    private fun `A 0 timeout means inactive`() {
+        val partyLease = PartyLease(Instant.now().toString(), 0)
+        partyLease.isActive() shouldBe false
+    }
 }

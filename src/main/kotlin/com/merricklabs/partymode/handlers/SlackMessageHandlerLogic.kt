@@ -6,6 +6,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.merricklabs.partymode.bots.PartyBot
 import com.merricklabs.partymode.slack.SlackCallbackMessage
 import com.merricklabs.partymode.slack.SlackChallengeMessage
+import com.merricklabs.partymode.slack.SlackClient
 import com.merricklabs.partymode.slack.SlackHeaders.SLACK_SIGNATURE
 import com.merricklabs.partymode.slack.SlackMessage
 import com.merricklabs.partymode.slack.SlackMessageType.EVENT_CALLBACK
@@ -19,6 +20,7 @@ private val log = KotlinLogging.logger {}
 
 class SlackMessageHandlerLogic : RequestHandler<Map<String, Any>, APIGatewayProxyResponseEvent>, KoinComponent {
     private val bot: PartyBot by inject()
+    private val slackClient: SlackClient by inject()
     private val helpers: HandlerHelpers by inject()
 
     override fun handleRequest(request: Map<String, Any>, context: Context): APIGatewayProxyResponseEvent {
@@ -38,7 +40,10 @@ class SlackMessageHandlerLogic : RequestHandler<Map<String, Any>, APIGatewayProx
             }
             EVENT_CALLBACK -> {
                 val callbackMessage = helpers.deserializeInput(requestBody, SlackCallbackMessage::class.java)
-                bot.handle(callbackMessage)
+                if (bot.shouldHandle(callbackMessage)) {
+                    val response = bot.handle(callbackMessage)
+                    slackClient.sendReply(response)
+                }
                 helpers.okResponse()
             }
             else -> helpers.okResponse()

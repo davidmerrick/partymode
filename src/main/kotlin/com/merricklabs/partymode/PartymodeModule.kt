@@ -7,6 +7,7 @@ import com.merricklabs.partymode.config.PartymodeConfigImpl
 import com.merricklabs.partymode.handlers.CallHandlerLogic
 import com.merricklabs.partymode.handlers.HandlerHelpers
 import com.merricklabs.partymode.handlers.SlackMessageHandlerLogic
+import com.merricklabs.partymode.slack.SlackClient
 import com.merricklabs.partymode.sns.SnsNotifier
 import com.merricklabs.partymode.storage.PartymodeStorage
 import com.merricklabs.partymode.twilio.TwilioHelpers
@@ -23,4 +24,5 @@ val PartymodeModule = module {
     single { SnsNotifier() }
     single { TwilioHelpers() }
     single { HandlerHelpers() }
+    single { SlackClient() }
 }

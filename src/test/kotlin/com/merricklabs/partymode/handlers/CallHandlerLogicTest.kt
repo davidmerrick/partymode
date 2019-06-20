@@ -4,8 +4,6 @@ import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent.ProxyRequestContext
 import com.merricklabs.partymode.PartymodeIntegrationTestBase
-import com.merricklabs.partymode.models.PartyLease
-import com.merricklabs.partymode.storage.PartymodeStorage
 import com.merricklabs.partymode.twilio.TwilioHeaders.TWILIO_SIGNATURE
 import com.merricklabs.partymode.twilio.TwilioHelpers
 import io.kotlintest.matchers.string.contain
@@ -16,7 +14,6 @@ import org.apache.http.HttpStatus
 import org.koin.test.inject
 import org.koin.test.mock.declareMock
 import org.mockito.BDDMockito.given
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
@@ -24,7 +21,6 @@ import java.net.URLEncoder
 
 class CallHandlerLogicTest : PartymodeIntegrationTestBase() {
 
-    private val partymodeStorage: PartymodeStorage by inject()
     private val callHandlerLogic: CallHandlerLogic by inject()
 
     private val mockInput = APIGatewayProxyRequestEvent().apply {
@@ -49,28 +45,28 @@ class CallHandlerLogicTest : PartymodeIntegrationTestBase() {
 
     @Test
     fun `If partymode is enabled, should play digits`() {
-        initMockLease(true)
+        enablePartyMode(true)
         val response = callHandlerLogic.handleRequest(mockInput, mockContext)
         response.body!!.toLowerCase() shouldHave contain("play digits")
     }
 
     @Test
     fun `If partymode is disabled, should forward to phone`() {
-        initMockLease(false)
+        enablePartyMode(false)
         val response = callHandlerLogic.handleRequest(mockInput, mockContext)
         response.body!!.toLowerCase() shouldHave contain(MY_NUMBER)
     }
 
     @Test
     fun `If call is from callbox number, allow it`() {
-        initMockLease(true)
+        enablePartyMode(true)
         val response = callHandlerLogic.handleRequest(mockInput, mockContext)
         response.body!!.toLowerCase() shouldNotHave contain("reject")
     }
 
     @Test
     fun `If call is not from callbox number, reject it`() {
-        initMockLease(true)
+        enablePartyMode(true)
         val invalidNumber = "9999999999"
         val mockInput = APIGatewayProxyRequestEvent().apply {
             headers = mapOf(TWILIO_SIGNATURE to "12345", "HOST" to "foo")
@@ -88,7 +84,7 @@ class CallHandlerLogicTest : PartymodeIntegrationTestBase() {
 
     @Test
     fun `If request doesn't have header, reject it`() {
-        initMockLease(true)
+        enablePartyMode(true)
         val mockInput = APIGatewayProxyRequestEvent().apply {
             headers = emptyMap()
             requestContext = ProxyRequestContext()
@@ -96,11 +92,5 @@ class CallHandlerLogicTest : PartymodeIntegrationTestBase() {
         }
         val response = callHandlerLogic.handleRequest(mockInput, mockContext)
         response.statusCode shouldBe HttpStatus.SC_BAD_REQUEST
-    }
-
-    private fun initMockLease(isActive: Boolean) {
-        val mockLease = mock(PartyLease::class.java)
-        `when`(mockLease.isActive()).thenReturn(isActive)
-        `when`(partymodeStorage.getLatestItem()).thenReturn(mockLease)
     }
 }

@@ -55,7 +55,9 @@ class PartymodeStorage : KoinComponent {
         )
     }
 
-    fun getLatestItem(): PartyLease {
+    fun isPartymodeEnabled() = getLatestItem().isActive()
+
+    private fun getLatestItem(): PartyLease {
         val scanRequest = ScanRequest()
                 .withTableName(dynamoDbConfig.tableName)
         val items = client.scan(scanRequest).items

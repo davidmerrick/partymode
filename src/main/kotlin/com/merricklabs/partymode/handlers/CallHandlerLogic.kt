@@ -76,9 +76,7 @@ class CallHandlerLogic : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayP
     }
 
     private fun buildResponse(): APIGatewayProxyResponseEvent {
-        val partyLease = storage.getLatestItem()
-        log.info("Got lease: $partyLease")
-        if (partyLease.isActive()) {
+        if (storage.isPartymodeEnabled()) {
             log.info("Buzzing someone in.")
             pushNotifications()
             val body = VoiceResponse.Builder()

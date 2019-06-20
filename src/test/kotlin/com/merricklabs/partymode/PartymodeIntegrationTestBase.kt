@@ -10,6 +10,7 @@ import com.merricklabs.partymode.storage.PartymodeStorage
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.test.KoinTest
+import org.koin.test.inject
 import org.koin.test.mock.declareMock
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito
@@ -61,5 +62,10 @@ open class PartymodeIntegrationTestBase : KoinTest {
         const val MY_NUMBER = "8675309"
         const val CALLBOX_NUMBER = "8675309"
         const val TWILIO_AUTH_TOKEN = "12345"
+    }
+
+    protected fun enablePartyMode(enabled: Boolean) {
+        val partymodeStorage by inject<PartymodeStorage>()
+        Mockito.`when`(partymodeStorage.isPartymodeEnabled()).thenReturn(enabled)
     }
 }

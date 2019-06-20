@@ -38,8 +38,10 @@ class PartymodeStorage : KoinComponent {
         this.table = dynamoDB.getTable(dynamoDbConfig.tableName)
     }
 
-    fun saveTimeToDb(timeoutHours: Int) {
-        log.info("Saving $timeoutHours to db")
+    fun disablePartyMode() = enableForHours(0)
+
+    fun enableForHours(numHours: Int) {
+        log.info("Saving $numHours to db")
         val endpoint = dynamoDbConfig.endpoint
         val region = dynamoDbConfig.region
         val client = AmazonDynamoDBClientBuilder.standard()
@@ -48,7 +50,7 @@ class PartymodeStorage : KoinComponent {
         client.putItem(dynamoDbConfig.tableName,
                 mapOf(
                         "start_time" to AttributeValue(Instant.now().toString()),
-                        "timeout" to AttributeValue(timeoutHours.toString())
+                        "timeout" to AttributeValue(numHours.toString())
                 )
         )
     }

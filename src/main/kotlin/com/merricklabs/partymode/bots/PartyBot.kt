@@ -30,13 +30,21 @@ class PartyBot : SlackBot() {
             in Regex(".*pm [1-5]$") -> {
                 val regex = "[1-5]$".toRegex()
                 val numHours = regex.find(message.event.text)!!.value.toInt()
-                storage.saveTimeToDb(numHours)
+                storage.enableForHours(numHours)
                 val suffix = if (numHours > 1) "hours" else "hour"
                 sendReply(message, "partymode enabled for $numHours $suffix")
             }
             in Regex(".*pm disable$") -> {
-                storage.saveTimeToDb(0)
+                storage.disablePartyMode()
                 sendReply(message, "partymode disabled")
+            }
+            in Regex(".*pm status$") -> {
+                val status = if (storage.getLatestItem().isActive()) {
+                    "enabled"
+                } else {
+                    "disabled"
+                }
+                sendReply(message, "partymode $status")
             }
             else -> sendReply(message, HELP_TEXT)
         }

@@ -57,22 +57,23 @@ functions:
           async: true
 
 resources:
-  RidesDynamoDbTable:
-    Type: 'AWS::DynamoDB::Table'
-    DeletionPolicy: Retain
-    Properties:
-      AttributeDefinitions:
-        - AttributeName: start_time
-          AttributeType: S
-      KeySchema:
-        - AttributeName: start_time
-          KeyType: HASH
-      ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
-      TableName: ${self:custom.tableName}
-  SNSTopic:
-    Type: AWS::SNS::Topic
-    Properties:
-      DisplayName: ${self:custom.snsTopic}
-      TopicName: ${self:custom.snsTopic}
+  Resources:
+    RidesDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: start_time
+            AttributeType: S
+        KeySchema:
+          - AttributeName: start_time
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.tableName}
+    SNSTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: ${self:custom.snsTopic}
+        TopicName: ${self:custom.snsTopic}

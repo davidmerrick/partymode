@@ -16,7 +16,11 @@ class SnsNotifier : KoinComponent {
         log.info("Pushing notification to SNS")
         val client = AmazonSNSAsyncClientBuilder.defaultClient()
         val request = PublishRequest(config.sns.topicArn, message)
-        val response = client.publish(request)
-        log.info("SNS messageId: ${response.messageId}")
+        try {
+            val response = client.publish(request)
+            log.info("SNS messageId: ${response.messageId}")
+        } catch(e: Exception){
+            log.error("Failed to notify SNS topic", e)
+        }
     }
 }

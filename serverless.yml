@@ -19,11 +19,11 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:Scan
         - dynamodb:Query
-      Resource: arn:aws:dynamodb:*:*:table/${self:custom.tableName}
+      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.tableName}
     - Effect: Allow
       Action:
         - SNS:Publish
-      Resource: ${env:SNS_TOPIC}
+      Resource: arn:aws:sns:${self:provider.region}:*:${self:custom.snsTopic}
   environment:
     DYNAMODB_ENDPOINT: ${self:custom.dynamoEndpoint}
     DYNAMODB_TABLE_NAME: ${self:custom.tableName}

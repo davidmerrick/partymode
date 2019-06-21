@@ -19,12 +19,12 @@ private val log = KotlinLogging.logger {}
 
 class PartymodeStorage : KoinComponent {
 
-    private val config by inject<PartymodeConfig>()
     private val dynamoDbConfig: DynamoDbConfig
     private val table: Table
     private val client: AmazonDynamoDB
 
     init {
+        val config by inject<PartymodeConfig>()
         this.dynamoDbConfig = config.dynamoDb
 
         val dynamoDbConfig = config.dynamoDb

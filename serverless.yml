@@ -75,5 +75,5 @@ resources:
     SNSTopic:
       Type: AWS::SNS::Topic
       Properties:
-      DisplayName: ${self:custom.snsTopic}
-      TopicName: ${self:custom.snsTopic}
+        DisplayName: ${self:custom.snsTopic}
+        TopicName: ${self:custom.snsTopic}

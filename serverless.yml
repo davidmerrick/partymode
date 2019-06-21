@@ -3,6 +3,7 @@ service: partymode
 custom:
   tableName: ${self:service}-${self:provider.stage}
   dynamoEndpoint: https://dynamodb.us-west-2.amazonaws.com
+  snsTopic: ${self:service}-${self:provider.stage}
 
 provider:
   name: aws
@@ -31,7 +32,7 @@ provider:
     SLACK_WEBHOOK_URI: ${env:SLACK_WEBHOOK_URI}
     BOT_TOKEN: ${env:BOT_TOKEN}
     BOT_NAME: ${env:BOT_NAME}
-    SNS_TOPIC: ${env:SNS_TOPIC}
+    SNS_TOPIC: ${self:custom.snsTopic}
     TWILIO_AUTH_TOKEN: ${env:TWILIO_AUTH_TOKEN}
 
 package:
@@ -71,3 +72,8 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:custom.tableName}
+    SNSTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+      DisplayName: ${self:custom.snsTopic}
+      TopicName: ${self:custom.snsTopic}

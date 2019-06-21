@@ -60,7 +60,6 @@ This repo contains config for deploying to prod via CircleCI. Simply set the fol
 * `MY_NUMBER`
 * `CALLBOX_NUMBER`
 * `SLACK_WEBHOOK_URI`
-* `SNS_TOPIC`
 
 ## Final steps
 

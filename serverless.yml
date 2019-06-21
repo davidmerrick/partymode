@@ -32,7 +32,7 @@ provider:
     SLACK_WEBHOOK_URI: ${env:SLACK_WEBHOOK_URI}
     BOT_TOKEN: ${env:BOT_TOKEN}
     BOT_NAME: ${env:BOT_NAME}
-    SNS_TOPIC: arn:aws:sns:${self:provider.region}:*:${self:custom.snsTopic}
+    SNS_TOPIC: { "Fn::Join" : ["", ["arn:aws:sns:${self:provider.region}:", { "Ref" : "AWS::AccountId" }, ":${self:custom.snsTopic}" ] ] }
     TWILIO_AUTH_TOKEN: ${env:TWILIO_AUTH_TOKEN}
 
 package:

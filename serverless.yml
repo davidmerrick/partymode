@@ -32,7 +32,7 @@ provider:
     SLACK_WEBHOOK_URI: ${env:SLACK_WEBHOOK_URI}
     BOT_TOKEN: ${env:BOT_TOKEN}
     BOT_NAME: ${env:BOT_NAME}
-    SNS_TOPIC: arn:aws:sns:*:*:${self:custom.snsTopic}
+    SNS_TOPIC: ${self:resources.SNSTopic.value}
     TWILIO_AUTH_TOKEN: ${env:TWILIO_AUTH_TOKEN}
 
 package:
@@ -57,23 +57,22 @@ functions:
           async: true
 
 resources:
-  Resources:
-    RidesDynamoDbTable:
-      Type: 'AWS::DynamoDB::Table'
-      DeletionPolicy: Retain
-      Properties:
-        AttributeDefinitions:
-          - AttributeName: start_time
-            AttributeType: S
-        KeySchema:
-          - AttributeName: start_time
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: ${self:custom.tableName}
-    SNSTopic:
-      Type: AWS::SNS::Topic
-      Properties:
-        DisplayName: ${self:custom.snsTopic}
-        TopicName: ${self:custom.snsTopic}
+  RidesDynamoDbTable:
+    Type: 'AWS::DynamoDB::Table'
+    DeletionPolicy: Retain
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: start_time
+          AttributeType: S
+      KeySchema:
+        - AttributeName: start_time
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      TableName: ${self:custom.tableName}
+  SNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: ${self:custom.snsTopic}
+      TopicName: ${self:custom.snsTopic}

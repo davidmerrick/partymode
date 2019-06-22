@@ -15,8 +15,8 @@ private val log = KotlinLogging.logger {}
 
 class SlackClient : KoinComponent {
 
-    val mapper by inject<ObjectMapper>()
-    val config by inject<PartymodeConfig>()
+    private val mapper by inject<ObjectMapper>()
+    private val config by inject<PartymodeConfig>()
 
     fun sendReply(message: SlackBotMessage) {
         val okHttpClient = OkHttpClient()

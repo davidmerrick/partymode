@@ -9,11 +9,19 @@ import org.koin.test.inject
 import org.testng.annotations.Test
 
 class PartyBotTest : PartymodeIntegrationTestBase() {
-    val bot by inject<PartyBot>()
+    private val bot by inject<PartyBot>()
 
     @Test
     fun `Set partymode`() {
         val messageText = "partybot pm 1"
+        val callbackMessage = constructMessage(messageText)
+        val response = bot.handle(callbackMessage)
+        response.text shouldHave contain("partymode enabled for 1 hour")
+    }
+
+    @Test
+    fun `Should be case insensitive`() {
+        val messageText = "partybot Pm 1"
         val callbackMessage = constructMessage(messageText)
         val response = bot.handle(callbackMessage)
         response.text shouldHave contain("partymode enabled for 1 hour")

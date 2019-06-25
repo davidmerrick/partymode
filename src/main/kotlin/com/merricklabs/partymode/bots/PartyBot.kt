@@ -15,11 +15,12 @@ class PartyBot : SlackBot() {
         log.info("Handling message")
         operator fun Regex.contains(text: CharSequence): Boolean = this.matches(text)
 
-        return when (message.event.text) {
+        val text = message.event.text.toLowerCase()
+        return when (text) {
             in Regex(".*pm help$") -> constructReply(message, HELP_TEXT)
             in Regex(".*pm [1-5]$") -> {
                 val regex = "[1-5]$".toRegex()
-                val numHours = regex.find(message.event.text)!!.value.toInt()
+                val numHours = regex.find(text)!!.value.toInt()
                 storage.enableForHours(numHours)
                 val suffix = if (numHours > 1) "hours" else "hour"
                 constructReply(message, "partymode enabled for $numHours $suffix")

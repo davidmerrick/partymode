@@ -6,6 +6,8 @@ import com.merricklabs.partymode.slack.SlackCallbackMessage
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
+const val SLACK_URL = "https://slack.com/api/chat.postMessage"
+
 abstract class SlackBot : KoinComponent {
     protected val config: PartymodeConfig by inject()
 

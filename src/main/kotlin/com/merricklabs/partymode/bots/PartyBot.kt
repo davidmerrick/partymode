@@ -8,6 +8,8 @@ import org.koin.core.inject
 
 private val log = KotlinLogging.logger {}
 
+private const val HELP_TEXT = "Usage:\npm `[1-5]`: Enable partymode for n hours"
+
 class PartyBot : SlackBot() {
     private val storage: PartymodeStorage by inject()
 
@@ -15,8 +17,7 @@ class PartyBot : SlackBot() {
         log.info("Handling message")
         operator fun Regex.contains(text: CharSequence): Boolean = this.matches(text)
 
-        val text = message.event.text.toLowerCase()
-        return when (text) {
+        return when (val text = message.event.text.toLowerCase()) {
             in Regex(".*pm help$") -> constructReply(message, HELP_TEXT)
             in Regex(".*pm [1-5]$") -> {
                 val regex = "[1-5]$".toRegex()
@@ -43,10 +44,5 @@ class PartyBot : SlackBot() {
 
     private fun constructReply(originalMessage: SlackCallbackMessage, text: String): SlackBotMessage {
         return SlackBotMessage(originalMessage.event.channel, "<@${originalMessage.event.user}>: $text")
-    }
-
-    companion object {
-        const val SLACK_URL = "https://slack.com/api/chat.postMessage"
-        const val HELP_TEXT = "Usage:\npm `[1-5]`: Enable partymode for n hours"
     }
 }

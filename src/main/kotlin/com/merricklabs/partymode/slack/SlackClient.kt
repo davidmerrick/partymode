@@ -1,7 +1,7 @@
 package com.merricklabs.partymode.slack
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.merricklabs.partymode.bots.PartyBot
+import com.merricklabs.partymode.bots.SLACK_URL
 import com.merricklabs.partymode.config.PartymodeConfig
 import mu.KotlinLogging
 import okhttp3.MediaType
@@ -25,7 +25,7 @@ class SlackClient : KoinComponent {
         log.info("Sending message back to Slack: ${mapper.writeValueAsString(message)}")
         val request = Request.Builder()
                 .header("Authorization", "Bearer ${config.slack.botToken}")
-                .url(PartyBot.SLACK_URL)
+                .url(SLACK_URL)
                 .post(body)
                 .build()
         val response = okHttpClient.newCall(request).execute()

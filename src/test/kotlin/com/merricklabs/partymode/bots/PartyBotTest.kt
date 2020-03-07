@@ -20,6 +20,22 @@ class PartyBotTest : PartymodeIntegrationTestBase() {
     }
 
     @Test
+    fun `Disable partymode`() {
+        val messageText = "partybot pm disable"
+        val callbackMessage = constructMessage(messageText)
+        val response = bot.handle(callbackMessage)
+        response.text shouldHave contain("partymode disabled")
+    }
+
+    @Test
+    fun `Disable partymode with space in command`() {
+        val messageText = "partybot pm disable "
+        val callbackMessage = constructMessage(messageText)
+        val response = bot.handle(callbackMessage)
+        response.text shouldHave contain("partymode disabled")
+    }
+
+    @Test
     fun `Should be case insensitive`() {
         val messageText = "partybot Pm 1"
         val callbackMessage = constructMessage(messageText)

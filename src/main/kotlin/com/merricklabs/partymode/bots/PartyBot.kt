@@ -8,7 +8,11 @@ import org.koin.core.inject
 
 private val log = KotlinLogging.logger {}
 
-private const val HELP_TEXT = "Usage:\npm `[1-5]`: Enable partymode for n hours"
+private val HELP_TEXT = """
+Usage: 
+* `pm [1-5]`: Enable partymode for n hours
+* `pm disable`: Disable partymode
+""".trimIndent()
 
 class PartyBot : SlackBot() {
     private val storage: PartymodeStorage by inject()
@@ -18,7 +22,7 @@ class PartyBot : SlackBot() {
         operator fun Regex.contains(text: CharSequence): Boolean = this.matches(text)
 
         return when (val text = message.event.text.toLowerCase()) {
-            in Regex(".*pm help$") -> constructReply(message, HELP_TEXT)
+            in Regex(".*pm help.*") -> constructReply(message, HELP_TEXT)
             in Regex(".*pm [1-5]$") -> {
                 val regex = "[1-5]$".toRegex()
                 val numHours = regex.find(text)!!.value.toInt()
@@ -26,11 +30,11 @@ class PartyBot : SlackBot() {
                 val suffix = if (numHours > 1) "hours" else "hour"
                 constructReply(message, "partymode enabled for $numHours $suffix")
             }
-            in Regex(".*pm disable$") -> {
+            in Regex(".*pm disable.*") -> {
                 storage.disablePartyMode()
                 constructReply(message, "partymode disabled")
             }
-            in Regex(".*pm status$") -> {
+            in Regex(".*pm status.*") -> {
                 val status = if (storage.isPartymodeEnabled()) {
                     "enabled"
                 } else {

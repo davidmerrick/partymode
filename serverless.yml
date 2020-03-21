@@ -10,7 +10,7 @@ provider:
   runtime: java8
   stage: ${opt:stage, "dev"}
   region: us-west-2
-  memorySize: 512
+  memorySize: 256
   timeout: 20
   iamRoleStatements:
     - Effect: Allow

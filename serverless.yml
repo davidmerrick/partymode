@@ -9,8 +9,9 @@ provider:
   name: aws
   runtime: java8
   stage: ${opt:stage, "dev"}
+  # Note: Memory needs to be 512 so CPU is allocated properly. Otherwise it times out.
+  memorySize: 512
   region: us-west-2
-  memorySize: 256
   timeout: 20
   iamRoleStatements:
     - Effect: Allow

@@ -1,0 +1,24 @@
+micronaut:
+  application:
+    name: partymode
+
+endpoints:
+  all:
+    enabled: false
+  health:
+    enabled: true
+
+jackson:
+  mapper:
+    ACCEPT_CASE_INSENSITIVE_ENUMS: true
+  bean-introspection-module: true
+  serializationInclusion: NON_NULL
+  deserialization:
+    failOnUnknownProperties: false
+
+slack:
+  token:
+
+logger:
+  levels:
+    io.github.davidmerrick.partymode: DEBUG

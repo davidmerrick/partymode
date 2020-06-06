@@ -1,4 +1,4 @@
-group = "com.merricklabs.partymode"
+group = "io.github.davidmerrick.partymode"
 
 repositories {
     mavenCentral()
@@ -6,50 +6,106 @@ repositories {
 }
 
 plugins {
-    id("de.fayard.buildSrcVersions") version Versions.de_fayard_buildsrcversions_gradle_plugin
-    kotlin("jvm") version Versions.org_jetbrains_kotlin
-    id("com.github.johnrengelman.shadow") version Versions.com_github_johnrengelman_shadow_gradle_plugin
+    id("com.github.johnrengelman.shadow") version "5.2.0"
+    kotlin("jvm") version "1.3.72"
+    kotlin("kapt") version "1.3.72"
+    kotlin("plugin.allopen") version "1.3.72"
+    application
+}
+
+application {
+    mainClassName = "io.github.davidmerrick.partymode.Application"
+}
+
+// Compiler plugin which makes classes with the following
+// annotations open
+allOpen {
+    annotations(
+            "io.micronaut.aop.Around",
+            "io.micronaut.http.annotation.Controller",
+            "javax.inject.Singleton"
+    )
 }
 
 dependencies {
-    implementation(Libs.twilio)
-    implementation(Libs.okhttp)
-    implementation(Libs.kotlin_stdlib_jdk8)
-    implementation(Libs.kotlin_reflect)
-    implementation(Libs.slf4j_api)
-    implementation(Libs.slf4j_jdk14)
-    implementation(Libs.kotlin_logging)
-    implementation(Libs.koin_core)
-    implementation(Libs.aws_lambda_java_core)
-    implementation(Libs.aws_lambda_java_log4j2)
-    implementation(Libs.aws_lambda_java_events)
-    implementation(Libs.aws_java_sdk_dynamodb)
-    implementation(Libs.aws_java_sdk_sns)
-    implementation(Libs.jackson_core)
-    implementation(Libs.jackson_databind)
-    implementation(Libs.jackson_annotations)
-    implementation(Libs.jackson_module_kotlin)
+    val micronautVersion by extra("1.3.4")
+    val awsSdkVersion by extra("1.11.573")
 
-    testImplementation(Libs.testng)
-    testImplementation(Libs.koin_test)
-    testImplementation(Libs.kotlintest_runner_junit5)
+    kapt(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    kapt("io.micronaut:micronaut-inject-java")
+    kapt("io.micronaut:micronaut-validation")
+
+    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    implementation("io.micronaut:micronaut-runtime")
+    implementation("io.micronaut:micronaut-inject")
+    implementation("io.micronaut:micronaut-validation")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("io.github.microutils:kotlin-logging:1.7.2")
+    implementation("org.slf4j:slf4j-simple:1.8.0-beta4")
+    implementation("io.micronaut:micronaut-http-server-netty")
+    implementation("io.github.davidmerrick.slakson:slakson:2.0.2")
+    implementation("io.micronaut:micronaut-management")
+    implementation("io.micronaut:micronaut-http-client")
+
+    implementation("com.twilio.sdk:twilio:7.39.0")
+    implementation("com.amazonaws:aws-java-sdk-dynamodb:$awsSdkVersion")
+    implementation("com.amazonaws:aws-java-sdk-sns:$awsSdkVersion")
+
+    // Test
+
+    kaptTest(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    kaptTest("io.micronaut:micronaut-inject-java")
+
+    testImplementation("org.spekframework.spek2:spek-runner-junit5:2.0.8")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.6.2")
+    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.3.2")
+    testImplementation("io.micronaut.test:micronaut-test-spock")
+    testImplementation("io.micronaut.test:micronaut-test-kotlintest")
+    testImplementation("io.micronaut.test:micronaut-test-junit5")
+    testImplementation("io.mockk:mockk:1.10.0")
 }
 
-val deployDev = tasks.create<Exec>("deployDev") {
-    commandLine = listOf("serverless", "deploy", "--stage=dev")
-}
+tasks {
+    compileKotlin {
+        kotlinOptions {
+            jvmTarget = "11"
+            javaParameters = true
+        }
+    }
 
-val deployPrd = tasks.create<Exec>("deployPrd") {
-    commandLine = listOf("serverless", "deploy", "--stage=prd")
-}
+    compileTestKotlin {
+        kotlinOptions {
+            jvmTarget = "11"
+            javaParameters = true
+        }
+    }
 
-// Alias for deploy dev
-val deploy = tasks.create("deploy")
-deploy.dependsOn(deployDev)
+    test {
+        useJUnitPlatform()
+    }
 
-deployDev.dependsOn(tasks.getByName("shadowJar"))
-deployPrd.dependsOn(tasks.getByName("shadowJar"))
+    named<JavaExec>("run") {
+        doFirst {
+            jvmArgs = listOf("-noverify", "-XX:TieredStopAtLevel=1", "-Dcom.sun.management.jmxremote")
+        }
+    }
 
-tasks.test {
-    useTestNG()
+    shadowJar {
+        archiveBaseName.set("application")
+        archiveClassifier.set("")
+        archiveVersion.set("")
+        mergeServiceFiles()
+        transform(com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer::class.java)
+    }
+
+    withType<JavaCompile> {
+        options.encoding = "UTF-8"
+    }
+
+    withType<Jar> {
+        manifest {
+            attributes["Main-Class"] = application.mainClassName
+        }
+    }
 }

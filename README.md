@@ -8,7 +8,6 @@ Buzzing people into your apartment building when you're having a party? Ain't no
 
 * Get a number from [Twilio](https://www.twilio.com/), which costs $1/month.
 * Get an AWS account. 
-* Install [Serverless](https://serverless.com/).
 * Get admin access to your Slack workspace.
 
 ## Slack setup
@@ -29,7 +28,7 @@ The app will reject calls from any other number, in the event you inevitably get
 In `serverless.yaml`, change `async` to `false` in the Slack handler:
 ```yaml
 slack-handler:
-    handler: com.merricklabs.partymode.handlers.SlackMessageHandler
+    handler: io.github.davidmerrick.partymode.handlers.SlackMessageHandler
     events:
       - http:
           path: slack/event

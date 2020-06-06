@@ -1,4 +1,4 @@
-package io.github.davidmerrick.partymode.twilio
+package io.github.davidmerrick.partymode.external.twilio
 
 object TwilioFields {
     const val CALL_SID = "CallSid"

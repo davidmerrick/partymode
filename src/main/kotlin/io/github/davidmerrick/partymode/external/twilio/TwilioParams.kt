@@ -1,6 +1,6 @@
-package io.github.davidmerrick.partymode.twilio
+package io.github.davidmerrick.partymode.external.twilio
 
-import io.github.davidmerrick.partymode.twilio.TwilioFields.FROM
+import io.github.davidmerrick.partymode.external.twilio.TwilioFields.FROM
 import java.net.URLDecoder
 
 data class TwilioParams(val paramMap: Map<String, String>) {

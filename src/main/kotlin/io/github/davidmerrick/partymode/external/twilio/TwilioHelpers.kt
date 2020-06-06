@@ -1,4 +1,4 @@
-package io.github.davidmerrick.partymode.twilio
+package io.github.davidmerrick.partymode.external.twilio
 
 class TwilioHelpers() {
 //    fun validateRequest(twilioParams: TwilioParams, requestUrl: String, twilioSignatureHeader: String): Boolean {

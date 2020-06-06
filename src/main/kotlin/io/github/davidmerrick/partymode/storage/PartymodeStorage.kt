@@ -34,6 +34,7 @@ class PartymodeStorage() {
 //    }
 //
 //    fun isPartymodeEnabled() = getLatestItem().isActive()
+fun isPartymodeEnabled() = true
 //
 //    private fun getLatestItem(): PartyLease {
 //        val scanRequest = ScanRequest()

@@ -1,0 +1,30 @@
+micronaut:
+  application:
+    name: partymode
+
+partymode:
+  botName: partybot
+  dynamo:
+    region: us-west-2
+    tableName: partymode
+    endpoint: http://localhost:4566
+  sns:
+    enabled: false
+  phone:
+    myNumber: +1-123-456-7890
+    callboxNumber: +1-123-456-9999
+  twilio:
+    authToken: banana
+
+endpoints:
+  all:
+    enabled: false
+  health:
+    enabled: true
+
+slack:
+  token:
+
+logger:
+  levels:
+    io.github.davidmerrick.partymode: DEBUG

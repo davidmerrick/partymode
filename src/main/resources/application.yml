@@ -1,0 +1,39 @@
+micronaut:
+  application:
+    name: partymode
+
+partymode:
+  botName: partybot
+  dynamo:
+    region: us-west-2
+    tableName: partymode
+    endpoint: https://dynamodb.us-west-2.amazonaws.com
+  sns:
+    enabled: false
+    topicArn:
+  phone:
+    myNumber:
+    callboxNumber:
+  twilio:
+    authToken:
+
+endpoints:
+  all:
+    enabled: false
+  health:
+    enabled: true
+
+jackson:
+  mapper:
+    ACCEPT_CASE_INSENSITIVE_ENUMS: true
+  bean-introspection-module: true
+  serializationInclusion: NON_NULL
+  deserialization:
+    failOnUnknownProperties: false
+
+slack:
+  token:
+
+logger:
+  levels:
+    io.github.davidmerrick.partymode: DEBUG

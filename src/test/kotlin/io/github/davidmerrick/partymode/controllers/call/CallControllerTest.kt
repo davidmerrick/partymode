@@ -1,4 +1,4 @@
-package io.github.davidmerrick.partymode.controllers
+package io.github.davidmerrick.partymode.controllers.call
 
 import io.github.davidmerrick.partymode.TestApplication
 import io.github.davidmerrick.partymode.config.PartymodeConfig.PhoneConfig
@@ -100,7 +100,7 @@ class CallControllerTest {
             twilioValidator.validate(any(), any(), any())
         } returns true
 
-        val invalidNumber = "9999999999"
+        val invalidNumber = "+19999999999"
         val body = "From=$invalidNumber" +
                 "&To=12345" +
                 "&CallSid=12345" +

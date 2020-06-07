@@ -19,18 +19,15 @@ private val log = KotlinLogging.logger {}
 class CallHandlerLogic(
         private val storage: PartymodeStorage,
         private val snsNotifier: SnsNotifier,
+        private val filter: CallFilter,
         private val config: PhoneConfig,
         private val snsConfig: SnsConfig
 ) {
     fun handleRequest(body: String): String {
-        log.info("Received body: $body")
-
         val twilioParams = TwilioParams(body)
-        twilioParams.from()?.let {
-            if (it.contains(config.callboxNumber) || it.contains(config.myNumber)) {
-                log.info("Received a valid call from callbox or my number.")
-                return buildResponse()
-            }
+        if (filter.apply(twilioParams)) {
+            log.info("Received a valid call.")
+            return buildResponse()
         }
 
         log.info("Invalid call. Rejecting.")

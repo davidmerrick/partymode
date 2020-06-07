@@ -7,6 +7,10 @@ partymode:
   firestore:
     projectId:
     collectionName: party-leases
+  sns:
+    region: us-west-2
+    enabled: false
+    topicArn:
   phone:
     myNumber:
     callboxNumber:

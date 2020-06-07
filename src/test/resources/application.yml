@@ -6,7 +6,11 @@ partymode:
   botName: partybot
   firestore:
     projectId: banana
-    collectionName: banana
+    collectionName: party-leases
+  sns:
+    region: us-west-2
+    enabled: false
+    topicArn:
   phone:
     myNumber: +11234567890
     callboxNumber: +11234569999

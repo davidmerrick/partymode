@@ -29,7 +29,7 @@ allOpen {
 
 dependencies {
     val micronautVersion by extra("1.3.4")
-    val awsSdkVersion by extra("1.11.573")
+    val awsSdkVersion by extra("2.13.31")
 
     kapt(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     kapt("io.micronaut:micronaut-inject-java")
@@ -48,6 +48,8 @@ dependencies {
     implementation("io.micronaut:micronaut-http-client")
     implementation("com.google.cloud:google-cloud-firestore:1.34.0")
     implementation("com.twilio.sdk:twilio:7.39.0")
+    implementation("software.amazon.awssdk:sns:$awsSdkVersion")
+
 
     // Test
 

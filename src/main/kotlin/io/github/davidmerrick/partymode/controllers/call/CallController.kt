@@ -17,7 +17,8 @@ class CallController(
         private val validator: TwilioValidatorWrapper
 ) {
 
-    @Post(produces = [MediaType.APPLICATION_XML])
+    @Post(consumes = [MediaType.APPLICATION_FORM_URLENCODED],
+            produces = [MediaType.APPLICATION_XML])
     fun handleCall(
             @Header(TWILIO_SIGNATURE) twilioSignature: String,
             @Context requestUrl: URI,

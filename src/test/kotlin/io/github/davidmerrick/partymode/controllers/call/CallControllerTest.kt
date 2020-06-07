@@ -6,8 +6,10 @@ import io.github.davidmerrick.partymode.external.twilio.TwilioHeaders.TWILIO_SIG
 import io.github.davidmerrick.partymode.external.twilio.TwilioValidatorWrapper
 import io.github.davidmerrick.partymode.storage.PartymodeStorage
 import io.kotlintest.shouldBe
+import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
+import io.micronaut.http.MediaType
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.http.client.exceptions.HttpClientResponseException
@@ -41,6 +43,7 @@ class CallControllerTest {
     fun `If request doesn't have header, reject it`() {
         val request = HttpRequest
                 .POST(CALL_ENDPOINT, "foo")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
 
         try {
             client.toBlocking()
@@ -65,6 +68,7 @@ class CallControllerTest {
         val request = HttpRequest
                 .POST(CALL_ENDPOINT, body)
                 .header(TWILIO_SIGNATURE, "12345")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
 
         val response = client.toBlocking()
                 .retrieve(request)
@@ -87,6 +91,7 @@ class CallControllerTest {
         val request = HttpRequest
                 .POST(CALL_ENDPOINT, body)
                 .header(TWILIO_SIGNATURE, "12345")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
 
         val response = client.toBlocking()
                 .retrieve(request)
@@ -109,6 +114,7 @@ class CallControllerTest {
         val request = HttpRequest
                 .POST(CALL_ENDPOINT, body)
                 .header(TWILIO_SIGNATURE, "12345")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
 
         val response = client.toBlocking()
                 .retrieve(request)

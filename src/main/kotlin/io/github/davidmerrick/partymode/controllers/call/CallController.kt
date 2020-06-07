@@ -24,9 +24,9 @@ class CallController(
             @Context requestUrl: URI,
             @Body body: String
     ): HttpResponse<String> {
-        if (!validator.validate(requestUrl.toString(), body, twilioSignature)) {
-            return HttpResponse.badRequest("Failed to validate request")
-        }
+//        if (!validator.validate(requestUrl.toString(), body, twilioSignature)) {
+//            return HttpResponse.badRequest("Failed to validate request")
+//        }
 
         val responseBody = logic.handleRequest(body)
         return HttpResponse.ok(responseBody)

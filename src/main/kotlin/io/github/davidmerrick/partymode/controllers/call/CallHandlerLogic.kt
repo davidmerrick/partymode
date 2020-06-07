@@ -6,9 +6,7 @@ import com.twilio.twiml.voice.Number
 import com.twilio.twiml.voice.Play
 import com.twilio.twiml.voice.Reject
 import io.github.davidmerrick.partymode.config.PartymodeConfig.PhoneConfig
-import io.github.davidmerrick.partymode.config.PartymodeConfig.SnsConfig
 import io.github.davidmerrick.partymode.external.twilio.TwilioParams
-import io.github.davidmerrick.partymode.sns.SnsNotifier
 import io.github.davidmerrick.partymode.storage.PartymodeStorage
 import mu.KotlinLogging
 import javax.inject.Singleton
@@ -18,10 +16,8 @@ private val log = KotlinLogging.logger {}
 @Singleton
 class CallHandlerLogic(
         private val storage: PartymodeStorage,
-        private val snsNotifier: SnsNotifier,
         private val filter: CallFilter,
-        private val config: PhoneConfig,
-        private val snsConfig: SnsConfig
+        private val config: PhoneConfig
 ) {
     fun handleRequest(body: String): String {
         val twilioParams = TwilioParams(body)
@@ -44,7 +40,6 @@ class CallHandlerLogic(
     private fun buildResponse(): String {
         if (storage.isPartymodeEnabled()) {
             log.info("Buzzing someone in.")
-            pushNotifications()
             val body = VoiceResponse.Builder()
                     .play(Play.Builder().digits("ww999").build())
                     .build()
@@ -56,12 +51,5 @@ class CallHandlerLogic(
                 .dial(Dial.Builder().number(number).build())
                 .build()
                 .toXml()
-    }
-
-    private fun pushNotifications() {
-        val message = "Buzzed someone in"
-        if (snsConfig.enabled) {
-            snsNotifier.notify(message)
-        }
     }
 }

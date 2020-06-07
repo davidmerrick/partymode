@@ -10,12 +10,17 @@ import javax.inject.Singleton
 private val log = KotlinLogging.logger {}
 
 @Singleton
-class PartymodeStorage(private val config: PartymodeConfig.FirestoreConfig) {
+class PartymodeStorage(config: PartymodeConfig.FirestoreConfig) {
 
-    private val firestoreOptions: FirestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
-            .setProjectId(config.projectId)
-            .build()
-    private val db: Firestore = firestoreOptions.service
+    private val db: Firestore
+
+    init {
+        val firestoreOptions: FirestoreOptions = FirestoreOptions.getDefaultInstance()
+                .toBuilder()
+                .setProjectId(config.projectId)
+                .build()
+        db = firestoreOptions.service
+    }
 
     fun disablePartyMode() = enableForHours(0)
 

@@ -4,12 +4,9 @@ micronaut:
 
 partymode:
   botName: partybot
-  dynamo:
-    region: us-west-2
-    tableName: partymode
-    endpoint: http://localhost:4566
-  sns:
-    enabled: false
+  firestore:
+    projectId: banana
+    collectionName: banana
   phone:
     myNumber: +11234567890
     callboxNumber: +11234569999

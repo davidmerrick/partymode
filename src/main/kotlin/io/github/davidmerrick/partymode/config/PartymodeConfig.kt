@@ -8,18 +8,6 @@ class PartymodeConfig {
     @get:NotBlank
     lateinit var botName: String
 
-    @ConfigurationProperties("dynamo")
-    class DynamoConfig {
-        @get:NotBlank
-        lateinit var endpoint: String
-
-        @get:NotBlank
-        lateinit var region: String
-
-        @get:NotBlank
-        lateinit var tableName: String
-    }
-
     @ConfigurationProperties("firestore")
     class FirestoreConfig {
         @get:NotBlank

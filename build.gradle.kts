@@ -46,10 +46,8 @@ dependencies {
     implementation("io.github.davidmerrick.slakson:slakson:2.0.2")
     implementation("io.micronaut:micronaut-management")
     implementation("io.micronaut:micronaut-http-client")
-
+    implementation("com.google.cloud:google-cloud-firestore:1.34.0")
     implementation("com.twilio.sdk:twilio:7.39.0")
-    implementation("com.amazonaws:aws-java-sdk-dynamodb:$awsSdkVersion")
-    implementation("com.amazonaws:aws-java-sdk-sns:$awsSdkVersion")
 
     // Test
 

@@ -20,6 +20,15 @@ class PartymodeConfig {
         lateinit var tableName: String
     }
 
+    @ConfigurationProperties("firestore")
+    class FirestoreConfig {
+        @get:NotBlank
+        lateinit var projectId: String
+
+        @get:NotBlank
+        lateinit var collectionName: String
+    }
+
     @ConfigurationProperties("twilio")
     class TwilioConfig {
         @get:NotBlank

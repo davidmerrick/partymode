@@ -17,8 +17,9 @@ It integrates with Slack so I or anyone in my workspace can enable it.
 
 ## Slack setup
 
-* Create a Slack webhook and set the `SLACK_WEBHOOK_URI` env var to that uri.
-* Create a Slack bot and subscribe to the following bot events: `app_mention`, `message.channels`, and `message.im`.
+- Create a Slack webhook and set the `SLACK_WEBHOOK_URI` env var to that uri.
+- Create a Slack bot and subscribe to the following bot events: `app_mention`, `message.channels`, and `message.im`.
+- Add oAuth scope for `chat:write`.
 
 ## Initial deployment
 

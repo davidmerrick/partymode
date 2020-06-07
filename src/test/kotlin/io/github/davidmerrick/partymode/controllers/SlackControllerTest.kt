@@ -17,11 +17,13 @@ import io.micronaut.http.client.annotation.Client
 import io.micronaut.test.annotation.MicronautTest
 import io.micronaut.test.annotation.MockBean
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.slot
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import javax.inject.Inject
@@ -46,6 +48,11 @@ class SlackControllerTest {
     @Inject
     @field:Client("/")
     lateinit var client: HttpClient
+
+    @BeforeEach
+    private fun beforeMethod() {
+        clearMocks(slackClient, storage)
+    }
 
     @Test
     fun `Handle Slack challenge`() {
@@ -128,6 +135,8 @@ class SlackControllerTest {
         slot.captured.text.contains("partymode enabled for 1 hour", true) shouldBe true
     }
 
+    // Todo: Capture slot isn't initialized when multiple tests are running with capture slots
+    // Find out why
     @Test
     @Disabled
     fun `On message containing "help", should display help text`() {

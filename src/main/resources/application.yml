@@ -4,13 +4,9 @@ micronaut:
 
 partymode:
   botName: partybot
-  dynamo:
-    region: us-west-2
-    tableName: partymode
-    endpoint: https://dynamodb.us-west-2.amazonaws.com
-  sns:
-    enabled: false
-    topicArn:
+  firestore:
+    projectId:
+    collectionName: party-leases
   phone:
     myNumber:
     callboxNumber:

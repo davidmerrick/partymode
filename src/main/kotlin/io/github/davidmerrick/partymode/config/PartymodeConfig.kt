@@ -8,16 +8,13 @@ class PartymodeConfig {
     @get:NotBlank
     lateinit var botName: String
 
-    @ConfigurationProperties("dynamo")
-    class DynamoConfig {
+    @ConfigurationProperties("firestore")
+    class FirestoreConfig {
         @get:NotBlank
-        lateinit var endpoint: String
+        lateinit var projectId: String
 
         @get:NotBlank
-        lateinit var region: String
-
-        @get:NotBlank
-        lateinit var tableName: String
+        lateinit var collectionName: String
     }
 
     @ConfigurationProperties("twilio")

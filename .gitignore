@@ -5,3 +5,6 @@ build
 .envrc
 .serverless
 out
+.kotlintest/
+creds.json
+.env

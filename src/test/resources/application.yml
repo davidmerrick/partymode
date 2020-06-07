@@ -7,28 +7,20 @@ partymode:
   dynamo:
     region: us-west-2
     tableName: partymode
-    endpoint: https://dynamodb.us-west-2.amazonaws.com
+    endpoint: http://localhost:4566
   sns:
     enabled: false
   phone:
     myNumber: +1-123-456-7890
     callboxNumber: +1-123-456-9999
   twilio:
-    authToken:
+    authToken: banana
 
 endpoints:
   all:
     enabled: false
   health:
     enabled: true
-
-jackson:
-  mapper:
-    ACCEPT_CASE_INSENSITIVE_ENUMS: true
-  bean-introspection-module: true
-  serializationInclusion: NON_NULL
-  deserialization:
-    failOnUnknownProperties: false
 
 slack:
   token:

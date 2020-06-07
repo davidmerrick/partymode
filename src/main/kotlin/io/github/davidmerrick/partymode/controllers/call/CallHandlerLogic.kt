@@ -1,10 +1,12 @@
-package io.github.davidmerrick.partymode.controllers.logic
+package io.github.davidmerrick.partymode.controllers.call
 
 import com.twilio.twiml.VoiceResponse
 import com.twilio.twiml.voice.Dial
+import com.twilio.twiml.voice.Number
 import com.twilio.twiml.voice.Play
 import com.twilio.twiml.voice.Reject
-import io.github.davidmerrick.partymode.config.PartymodeConfig
+import io.github.davidmerrick.partymode.config.PartymodeConfig.PhoneConfig
+import io.github.davidmerrick.partymode.config.PartymodeConfig.SnsConfig
 import io.github.davidmerrick.partymode.external.twilio.TwilioParams
 import io.github.davidmerrick.partymode.sns.SnsNotifier
 import io.github.davidmerrick.partymode.storage.PartymodeStorage
@@ -17,14 +19,15 @@ private val log = KotlinLogging.logger {}
 class CallHandlerLogic(
         private val storage: PartymodeStorage,
         private val snsNotifier: SnsNotifier,
-        private val config: PartymodeConfig
+        private val config: PhoneConfig,
+        private val snsConfig: SnsConfig
 ) {
     fun handleRequest(body: String): String {
         log.info("Received body: $body")
 
         val twilioParams = TwilioParams(body)
         twilioParams.from()?.let {
-            if (it.contains(config.phone.callboxNumber) || it.contains(config.phone.myNumber)) {
+            if (it.contains(config.callboxNumber) || it.contains(config.myNumber)) {
                 log.info("Received a valid call from callbox or my number.")
                 return buildResponse()
             }
@@ -51,16 +54,16 @@ class CallHandlerLogic(
             return body.toXml()
         }
 
-        val number = Number.Builder(config.phone.myNumber).build()
-        val body = VoiceResponse.Builder()
+        val number = Number.Builder(config.myNumber).build()
+        return VoiceResponse.Builder()
                 .dial(Dial.Builder().number(number).build())
                 .build()
-        return body.toXml()
+                .toXml()
     }
 
     private fun pushNotifications() {
         val message = "Buzzed someone in"
-        if (config.sns.topicArn != null) {
+        if (snsConfig.enabled) {
             snsNotifier.notify(message)
         }
     }

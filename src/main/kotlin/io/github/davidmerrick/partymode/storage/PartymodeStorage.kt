@@ -7,8 +7,7 @@ import com.amazonaws.services.dynamodbv2.document.DynamoDB
 import com.amazonaws.services.dynamodbv2.document.Table
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.amazonaws.services.dynamodbv2.model.ScanRequest
-import io.github.davidmerrick.partymode.config.DynamoDbConfig
-import io.github.davidmerrick.partymode.config.PartymodeConfig
+import io.github.davidmerrick.partymode.config.PartymodeConfig.DynamoConfig
 import io.github.davidmerrick.partymode.models.PartyLease
 import mu.KotlinLogging
 import java.time.Instant
@@ -17,19 +16,16 @@ import javax.inject.Singleton
 private val log = KotlinLogging.logger {}
 
 @Singleton
-class PartymodeStorage(config: PartymodeConfig) {
+class PartymodeStorage(private val dynamoDbConfig: DynamoConfig) {
 
-    private val dynamoDbConfig: DynamoDbConfig = config.dynamo
     private val table: Table
-    private val client: AmazonDynamoDB
+    private val client: AmazonDynamoDB = AmazonDynamoDBClientBuilder.standard()
+            .withEndpointConfiguration(
+                    AwsClientBuilder.EndpointConfiguration(dynamoDbConfig.endpoint, dynamoDbConfig.region)
+            )
+            .build()
 
     init {
-        client = AmazonDynamoDBClientBuilder.standard()
-                .withEndpointConfiguration(
-                        AwsClientBuilder.EndpointConfiguration(dynamoDbConfig.endpoint, dynamoDbConfig.region)
-                )
-                .build()
-
         val dynamoDB = DynamoDB(client)
         this.table = dynamoDB.getTable(dynamoDbConfig.tableName)
     }

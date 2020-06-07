@@ -1,5 +1,7 @@
 package io.github.davidmerrick.partymode.external.slack
 
+import io.github.davidmerrick.partymode.bots.PartyBot
+import io.github.davidmerrick.partymode.config.PartymodeConfig
 import io.github.davidmerrick.slakson.client.SlackClient
 import io.github.davidmerrick.slakson.messages.ChannelType.CHANNEL
 import io.github.davidmerrick.slakson.messages.ChannelType.GROUP
@@ -14,10 +16,10 @@ private val log = KotlinLogging.logger {}
 
 @Singleton
 class SlackEventHandler(
-        private val slackClient: SlackClient
+        private val slackClient: SlackClient,
+        private val partyBot: PartyBot,
+        private val config: PartymodeConfig
 ) {
-    private val botName = "partymode"
-
     fun handle(event: SlackEvent): String? {
         log.info("Handling Slack event")
         when (event.channelType) {
@@ -30,8 +32,8 @@ class SlackEventHandler(
 
     private fun handleChannelEvent(event: SlackEvent) {
         log.info("Handling channel event")
-        if (event.type != SlackEventType.APP_MENTION && !event.text.contains(botName, true)) {
-            log.info("Text does not contain ${botName}, skipping")
+        if (event.type != SlackEventType.APP_MENTION && !event.text.contains(config.botName, true)) {
+            log.info("Text does not contain ${config.botName}, skipping")
             return
         }
 
@@ -50,7 +52,7 @@ class SlackEventHandler(
     }
 
     private fun postReply(event: SlackEvent) {
-        val replyText = getReplyText(event)
+        val replyText = partyBot.handle(event)
 
         log.info("Posting reply: $replyText")
         val reply = CreateMessagePayload(
@@ -59,9 +61,5 @@ class SlackEventHandler(
         )
 
         slackClient.postMessage(reply)
-    }
-
-    private fun getReplyText(event: SlackEvent): String {
-        return "foo"
     }
 }

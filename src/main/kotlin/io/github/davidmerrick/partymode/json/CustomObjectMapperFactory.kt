@@ -1,4 +1,4 @@
-package io.github.davidmerrick.partymode.util
+package io.github.davidmerrick.partymode.json
 
 import com.fasterxml.jackson.core.JsonFactory
 import com.fasterxml.jackson.databind.ObjectMapper

@@ -1,8 +1,7 @@
 package io.github.davidmerrick.partymode.bots
 
 import io.github.davidmerrick.partymode.storage.PartymodeStorage
-import io.github.davidmerrick.slakson.messages.CreateMessagePayload
-import io.github.davidmerrick.slakson.messages.EventCallbackMessage
+import io.github.davidmerrick.slakson.messages.SlackEvent
 import mu.KotlinLogging
 import javax.inject.Singleton
 
@@ -17,22 +16,21 @@ Usage:
 @Singleton
 class PartyBot(private val storage: PartymodeStorage) {
 
-    fun handle(message: EventCallbackMessage): CreateMessagePayload {
+    fun handle(event: SlackEvent): String {
         log.info("Handling message")
         operator fun Regex.contains(text: CharSequence): Boolean = this.matches(text)
 
-        return when (val text = message.event.text.toLowerCase()) {
-            in Regex(".*pm help.*") -> constructReply(message, HELP_TEXT)
+        return when (val text = event.text.toLowerCase()) {
             in Regex(".*pm [1-5]$") -> {
                 val regex = "[1-5]$".toRegex()
                 val numHours = regex.find(text)!!.value.toInt()
                 storage.enableForHours(numHours)
                 val suffix = if (numHours > 1) "hours" else "hour"
-                constructReply(message, "partymode enabled for $numHours $suffix")
+                "partymode enabled for $numHours $suffix"
             }
             in Regex(".*pm disable.*") -> {
                 storage.disablePartyMode()
-                constructReply(message, "partymode disabled")
+                "partymode disabled"
             }
             in Regex(".*pm status.*") -> {
                 val status = if (storage.isPartymodeEnabled()) {
@@ -40,13 +38,9 @@ class PartyBot(private val storage: PartymodeStorage) {
                 } else {
                     "disabled"
                 }
-                constructReply(message, "partymode $status")
+                "partymode $status"
             }
-            else -> constructReply(message, HELP_TEXT)
+            else -> HELP_TEXT
         }
-    }
-
-    private fun constructReply(originalMessage: EventCallbackMessage, text: String): CreateMessagePayload {
-        return CreateMessagePayload(originalMessage.event.channel, "<@${originalMessage.event.user}>: $text")
     }
 }

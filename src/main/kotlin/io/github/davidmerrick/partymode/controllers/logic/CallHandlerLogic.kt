@@ -2,8 +2,9 @@ package io.github.davidmerrick.partymode.controllers.logic
 
 import com.twilio.twiml.VoiceResponse
 import com.twilio.twiml.voice.Dial
+import com.twilio.twiml.voice.Play
 import com.twilio.twiml.voice.Reject
-import io.github.davidmerrick.partymode.external.twilio.TwilioHelpers
+import io.github.davidmerrick.partymode.config.PartymodeConfig
 import io.github.davidmerrick.partymode.external.twilio.TwilioParams
 import io.github.davidmerrick.partymode.sns.SnsNotifier
 import io.github.davidmerrick.partymode.storage.PartymodeStorage
@@ -16,13 +17,9 @@ private val log = KotlinLogging.logger {}
 class CallHandlerLogic(
         private val storage: PartymodeStorage,
         private val snsNotifier: SnsNotifier,
-        private val twilioHelpers: TwilioHelpers
+        private val config: PartymodeConfig
 ) {
     fun handleRequest(body: String): String {
-        if (!validateRequest(body)) {
-            // Todo: Throw exception
-        }
-
         log.info("Received body: $body")
 
         val twilioParams = TwilioParams(body)
@@ -37,29 +34,11 @@ class CallHandlerLogic(
         return buildRejectResponse()
     }
 
-    private fun validateRequest(request:): Boolean {
-        val headers = request.headers
-        if (!headers.containsKey(TWILIO_SIGNATURE)) {
-            log.warn("Request headers does not contain Twilio signature.")
-            return false
-        }
-
-        val twilioParams = TwilioParams(request.body)
-        val requestUrl = request.getRequestUrl()
-        if (!twilioHelpers.validateRequest(twilioParams, requestUrl, headers[TWILIO_SIGNATURE]!!)) {
-            log.warn("Request did not match signature. " +
-                    "Request url: $requestUrl, Signature: ${headers[TWILIO_SIGNATURE]}")
-            return false
-        }
-
-        return true
-    }
-
     private fun buildRejectResponse(): String {
         val body = VoiceResponse.Builder()
                 .reject(Reject.Builder().build())
                 .build()
-        return xmlResponse(body)
+        return body.toXml()
     }
 
     private fun buildResponse(): String {
@@ -69,7 +48,7 @@ class CallHandlerLogic(
             val body = VoiceResponse.Builder()
                     .play(Play.Builder().digits("ww999").build())
                     .build()
-            return xmlResponse(body)
+            return body.toXml()
         }
 
         val number = Number.Builder(config.phone.myNumber).build()

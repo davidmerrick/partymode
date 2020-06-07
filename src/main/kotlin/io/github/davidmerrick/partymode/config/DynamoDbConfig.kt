@@ -1,7 +1,14 @@
 package io.github.davidmerrick.partymode.config
 
+import javax.validation.constraints.NotBlank
+
 class DynamoDbConfig {
-    val endpoint = System.getenv("DYNAMODB_ENDPOINT") ?: "https://dynamodb.us-west-2.amazonaws.com"
-    val region = System.getenv("DYNAMODB_REGION") ?: "us-west-2"
-    val tableName= System.getenv("DYNAMODB_TABLE_NAME") ?: "partymode"
+    @get:NotBlank
+    lateinit var endpoint: String
+
+    @get:NotBlank
+    lateinit var region: String
+
+    @get:NotBlank
+    lateinit var tableName: String
 }

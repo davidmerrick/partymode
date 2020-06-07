@@ -1,6 +1,11 @@
 package io.github.davidmerrick.partymode.config
 
+import javax.validation.constraints.NotBlank
+
 class PhoneConfig {
-    val myNumber: String = System.getenv("MY_NUMBER")
-    val callboxNumber: String = System.getenv("CALLBOX_NUMBER")
+    @get:NotBlank
+    lateinit var myNumber: String
+
+    @get:NotBlank
+    lateinit var callboxNumber: String
 }

@@ -2,6 +2,14 @@ micronaut:
   application:
     name: partymode
 
+partymode:
+  dynamo:
+    region: us-west-2
+    tableName: partymode
+    endpoint: https://dynamodb.us-west-2.amazonaws.com
+  sns:
+
+
 endpoints:
   all:
     enabled: false

@@ -7,7 +7,7 @@ import javax.inject.Singleton
 
 private val log = KotlinLogging.logger {}
 
-private val HELP_TEXT = """
+val helpText = """
 Usage: 
 * `pm [1-5]`: Enable partymode for n hours
 * `pm disable`: Disable partymode
@@ -40,7 +40,7 @@ class PartyBot(private val storage: PartymodeStorage) {
                 }
                 "partymode $status"
             }
-            else -> HELP_TEXT
+            else -> helpText
         }
     }
 }

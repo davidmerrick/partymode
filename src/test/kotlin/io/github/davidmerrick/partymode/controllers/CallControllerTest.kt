@@ -22,16 +22,16 @@ import javax.inject.Inject
 private const val CALL_ENDPOINT = "/call"
 
 @MicronautTest(application = TestApplication::class)
-class TwilioControllerTest {
+class CallControllerTest {
+
+    @get:MockBean(PartymodeStorage::class)
+    val storage = mockk<PartymodeStorage>()
 
     @Inject
     lateinit var phoneConfig: PhoneConfig
 
     @get:MockBean(TwilioValidatorWrapper::class)
     val twilioValidator = mockk<TwilioValidatorWrapper>()
-
-    @get:MockBean(PartymodeStorage::class)
-    val storage = mockk<PartymodeStorage>()
 
     @Inject
     @field:Client("/")

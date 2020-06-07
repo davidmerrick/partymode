@@ -6,7 +6,7 @@ partymode:
   botName: partybot
   firestore:
     projectId:
-    collectionName:
+    collectionName: party-leases
   phone:
     myNumber:
     callboxNumber:

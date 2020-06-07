@@ -1,48 +1,67 @@
 package io.github.davidmerrick.partymode.storage
 
+import com.google.cloud.Timestamp
 import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.FirestoreOptions
+import com.google.cloud.firestore.Query
 import io.github.davidmerrick.partymode.config.PartymodeConfig
-import io.github.davidmerrick.partymode.models.PartyLease
 import mu.KotlinLogging
+import java.time.temporal.ChronoUnit
 import javax.inject.Singleton
 
 private val log = KotlinLogging.logger {}
 
+private const val CREATED_AT_FIELD = "created_at"
+private const val TTL_FIELD = "ttl_hours"
+
 @Singleton
-class PartymodeStorage(config: PartymodeConfig.FirestoreConfig) {
+class PartymodeStorage(private val config: PartymodeConfig.FirestoreConfig) {
 
-    private val db: Firestore
-
-    init {
+    private val db: Firestore by lazy {
         val firestoreOptions: FirestoreOptions = FirestoreOptions.getDefaultInstance()
                 .toBuilder()
                 .setProjectId(config.projectId)
                 .build()
-        db = firestoreOptions.service
+        firestoreOptions.service
     }
 
-    fun disablePartyMode() = enableForHours(0)
+    fun disablePartyMode() = enableForHours(-1)
 
     fun enableForHours(numHours: Int) {
         log.info("Saving $numHours to db")
-//        client.putItem(config.tableName,
-//                mapOf("start_time" to AttributeValue(Instant.now().toString()),
-//                        "timeout" to AttributeValue(numHours.toString()))
-//        )
+        val lease = mapOf(
+                CREATED_AT_FIELD to Timestamp.now(),
+                TTL_FIELD to numHours
+        )
+
+        db.collection(config.collectionName)
+                .add(lease)
+                .get()
     }
 
-    fun isPartymodeEnabled() = getLatestItem().isActive()
+    fun isPartymodeEnabled(): Boolean {
+        val snapshot = db.collection(config.collectionName)
+                .orderBy(CREATED_AT_FIELD, Query.Direction.DESCENDING)
+                .limit(1)
+                .get()
+                .get()
 
-    private fun getLatestItem(): PartyLease {
-//        val item = items.maxBy { Instant.parse(it["start_time"]!!.s) }
-//
-//        item?.let {
-//            log.info("Got item: $item")
-//            return PartyLease(item["start_time"]!!.s, item["timeout"]!!.s.toInt())
-//        }
+        if (snapshot.isEmpty) {
+            return false
+        }
 
-        log.info("No item found. Returning default.")
-        return PartyLease.default()
+        // Check if expiration time is after now
+        val lease = snapshot.documents[0]
+        val createdAt = lease[CREATED_AT_FIELD] as Timestamp
+        log.info("Found lease created at $createdAt")
+
+        val ttlHours = lease[TTL_FIELD] as Long
+        val expiresAt = createdAt
+                .toDate()
+                .toInstant()
+                .plus(ttlHours, ChronoUnit.HOURS)
+        val now = Timestamp.now().toDate().toInstant()
+
+        return expiresAt.isAfter(now)
     }
 }

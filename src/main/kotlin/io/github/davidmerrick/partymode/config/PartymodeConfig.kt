@@ -36,6 +36,9 @@ class PartymodeConfig {
     class SnsConfig {
         var topicArn: String? = null
         var enabled: Boolean = false
+
+        @get:NotBlank
+        var region: String = ""
     }
 }
 

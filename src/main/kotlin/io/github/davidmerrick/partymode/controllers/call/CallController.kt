@@ -39,7 +39,7 @@ class CallController(
     }
 
     private fun resolveUri(request: HttpRequest<String>): String {
-        log.info("Headers: " + request.headers.toString())
+        log.info("Headers: " + request.headers.asMap())
         return resolver.resolve(request) + request.path
     }
 }

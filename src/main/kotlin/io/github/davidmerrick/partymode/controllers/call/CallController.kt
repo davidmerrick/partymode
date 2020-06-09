@@ -29,13 +29,17 @@ class CallController(
             @Context request: HttpRequest<String>,
             @Body body: String
     ): HttpResponse<String> {
-        val requestUrl = resolver.resolve(request) + request.path
-        log.info("Received call request to $requestUrl")
+        val requestUrl = resolveUri(request)
         if (!validator.validate(requestUrl, body, twilioSignature)) {
             return HttpResponse.badRequest("Failed to validate request")
         }
 
         val responseBody = logic.handleRequest(body)
         return HttpResponse.ok(responseBody)
+    }
+
+    private fun resolveUri(request: HttpRequest<String>): String {
+        log.info("Headers: " + request.headers.toString())
+        return resolver.resolve(request) + request.path
     }
 }

@@ -15,7 +15,7 @@ partymode:
     myNumber: +11234567890
     callboxNumber: +11234569999
   twilio:
-    authToken: banana
+    authToken: 12345
 
 endpoints:
   all:

@@ -12,6 +12,8 @@ import io.micronaut.http.annotation.Header
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.server.util.HttpHostResolver
 import mu.KotlinLogging
+import org.apache.http.client.utils.URIBuilder
+import java.net.URI
 
 private val log = KotlinLogging.logger {}
 
@@ -39,7 +41,15 @@ class CallController(
     }
 
     private fun resolveUri(request: HttpRequest<String>): String {
-        log.info("Headers: " + request.headers.asMap())
-        return resolver.resolve(request) + request.path
+        val resolvedUrl = resolver.resolve(request) + request.path
+
+        // Cloud Run forwards https to http for the container. Swap out the scheme if this is the case
+        if (request.headers.contains("x-forwarded-proto")) {
+            return URIBuilder(URI.create(resolvedUrl))
+                    .setScheme(request.headers["x-forwarded-proto"]!!)
+                    .toString()
+        }
+
+        return resolvedUrl
     }
 }

@@ -32,10 +32,10 @@ class CallController(
             @Body body: String
     ): HttpResponse<String> {
         val requestUrl = resolveUri(request)
-        log.info("Handling call request at $requestUrl with request body: $body")
-        if (!validator.validate(requestUrl, body, twilioSignature)) {
-            return HttpResponse.badRequest("Failed to validate request")
-        }
+        log.info("Validation context:\nSignature: $twilioSignature,\nURL: $requestUrl,\nBody: $body")
+//        if (!validator.validate(requestUrl, body, twilioSignature)) {
+//            return HttpResponse.badRequest("Failed to validate request")
+//        }
 
         val responseBody = logic.handleRequest(body)
         return HttpResponse.ok(responseBody)

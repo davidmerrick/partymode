@@ -6,7 +6,7 @@ import com.twilio.twiml.voice.Number
 import com.twilio.twiml.voice.Play
 import com.twilio.twiml.voice.Reject
 import io.github.davidmerrick.partymode.config.PartymodeConfig.PhoneConfig
-import io.github.davidmerrick.partymode.external.twilio.TwilioParams
+import io.github.davidmerrick.partymode.external.twilio.TwilioCallPayload
 import io.github.davidmerrick.partymode.pubsub.NotificationProducer
 import io.github.davidmerrick.partymode.storage.PartymodeStorage
 import mu.KotlinLogging
@@ -24,9 +24,8 @@ class CallHandlerLogic(
     /**
      * Returns a TwiML XML voice response
      */
-    fun handleRequest(body: String): String {
-        val twilioParams = TwilioParams(body)
-        if (filter.apply(twilioParams)) {
+    fun handleRequest(callPayload: TwilioCallPayload): String {
+        if (filter.apply(callPayload)) {
             log.info("Received a valid call.")
             return acceptCall()
         }

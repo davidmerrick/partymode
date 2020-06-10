@@ -2,8 +2,8 @@ package io.github.davidmerrick.partymode.controllers.call
 
 import io.github.davidmerrick.partymode.TestApplication
 import io.github.davidmerrick.partymode.config.PartymodeConfig.PhoneConfig
+import io.github.davidmerrick.partymode.external.twilio.PartymodeCallRequestValidator
 import io.github.davidmerrick.partymode.external.twilio.TwilioHeaders.TWILIO_SIGNATURE
-import io.github.davidmerrick.partymode.external.twilio.TwilioValidatorWrapper
 import io.github.davidmerrick.partymode.storage.PartymodeStorage
 import io.kotlintest.shouldBe
 import io.micronaut.http.HttpHeaders
@@ -32,8 +32,8 @@ class CallControllerTest {
     @Inject
     lateinit var phoneConfig: PhoneConfig
 
-    @get:MockBean(TwilioValidatorWrapper::class)
-    val twilioValidator = mockk<TwilioValidatorWrapper>()
+    @get:MockBean(PartymodeCallRequestValidator::class)
+    val twilioValidator = mockk<PartymodeCallRequestValidator>()
 
     @Inject
     @field:Client("/")
@@ -54,10 +54,28 @@ class CallControllerTest {
     }
 
     @Test
+    fun `If request validation fails, reject it`() {
+        every {
+            twilioValidator.validate(any(), any<Map<String, String>>(), any())
+        } returns false
+
+        val request = HttpRequest
+                .POST(CALL_ENDPOINT, "foo")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+
+        try {
+            client.toBlocking()
+                    .retrieve(request, HttpStatus::class.java)
+        } catch (e: Exception) {
+            (e as HttpClientResponseException).status shouldBe HttpStatus.BAD_REQUEST
+        }
+    }
+
+    @Test
     fun `If partymode is enabled, play digits`() {
         enablePartymode()
         every {
-            twilioValidator.validate(any(), any(), any())
+            twilioValidator.validate(any(), any<Map<String, String>>(), any())
         } returns true
 
         val body = "From=${URLEncoder.encode(phoneConfig.callboxNumber, "UTF-8")}" +
@@ -80,7 +98,7 @@ class CallControllerTest {
     fun `If partymode is disabled, forward call to phone`() {
         disablePartymode()
         every {
-            twilioValidator.validate(any(), any(), any())
+            twilioValidator.validate(any(), any<Map<String, String>>(), any())
         } returns true
 
         val body = "From=${URLEncoder.encode(phoneConfig.callboxNumber, "UTF-8")}" +
@@ -102,7 +120,7 @@ class CallControllerTest {
     @Test
     fun `If call is not from my number or callbox, reject it`() {
         every {
-            twilioValidator.validate(any(), any(), any())
+            twilioValidator.validate(any(), any<Map<String, String>>(), any())
         } returns true
 
         val invalidNumber = "+19999999999"

@@ -1,7 +1,8 @@
 package io.github.davidmerrick.partymode.controllers.call
 
 import io.github.davidmerrick.partymode.TestApplication
-import io.github.davidmerrick.partymode.external.twilio.TwilioValidatorWrapper
+import io.github.davidmerrick.partymode.external.twilio.PartymodeCallRequestValidator
+import io.kotlintest.shouldBe
 import io.micronaut.test.annotation.MicronautTest
 import org.junit.jupiter.api.Test
 import javax.inject.Inject
@@ -11,7 +12,7 @@ import javax.inject.Inject
 class ValidatorWrapperTest {
 
     @Inject
-    lateinit var twilioValidatorWrapper: TwilioValidatorWrapper
+    lateinit var requestValidator: PartymodeCallRequestValidator
 
     @Test
     fun `Confirm validation works`() {
@@ -23,12 +24,9 @@ class ValidatorWrapperTest {
                 "Digits" to "1234",
                 "From" to "+12349013030",
                 "To" to "+18005551212"
-        ).asSequence()
-                .map { it.key + "=" + it.value }
-                .joinToString("&")
-        val signature = "0/KCTR6DLpKmkAf8muzZqo1nDgQ="
+        )
+        val twilioSignature = "0/KCTR6DLpKmkAf8muzZqo1nDgQ="
 
-        twilioValidatorWrapper.validate(params, url, signature)
+        requestValidator.validate(url, params, twilioSignature) shouldBe true
     }
-
 }

@@ -1,7 +1,8 @@
 package io.github.davidmerrick.partymode.controllers.call
 
+import io.github.davidmerrick.partymode.external.twilio.PartymodeCallRequestValidator
+import io.github.davidmerrick.partymode.external.twilio.TwilioCallPayload
 import io.github.davidmerrick.partymode.external.twilio.TwilioHeaders.TWILIO_SIGNATURE
-import io.github.davidmerrick.partymode.external.twilio.TwilioValidatorWrapper
 import io.micronaut.context.annotation.Context
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
@@ -20,7 +21,7 @@ private val log = KotlinLogging.logger {}
 @Controller("/call")
 class CallController(
         private val logic: CallHandlerLogic,
-        private val validator: TwilioValidatorWrapper,
+        private val requestValidator: PartymodeCallRequestValidator,
         private val resolver: HttpHostResolver
 ) {
 
@@ -32,12 +33,13 @@ class CallController(
             @Body body: String
     ): HttpResponse<String> {
         val requestUrl = resolveUri(request)
-        log.info("Validation context:\nSignature: $twilioSignature,\nURL: $requestUrl,\nBody: $body")
-//        if (!validator.validate(requestUrl, body, twilioSignature)) {
-//            return HttpResponse.badRequest("Failed to validate request")
-//        }
+        val payload = TwilioCallPayload(body)
+        log.info("Payload: $payload")
+        if (!requestValidator.validate(requestUrl, payload.paramMap, twilioSignature)) {
+            return HttpResponse.badRequest("Failed to validate request")
+        }
 
-        val responseBody = logic.handleRequest(body)
+        val responseBody = logic.handleRequest(payload)
         return HttpResponse.ok(responseBody)
     }
 

@@ -182,7 +182,7 @@ class SlackControllerTest {
         } returns value
 
         every {
-            storage.enableForHours(any())
+            storage.enable(any())
         } just runs
     }
 }

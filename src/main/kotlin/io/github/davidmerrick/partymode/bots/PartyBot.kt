@@ -8,7 +8,7 @@ import javax.inject.Singleton
 private val log = KotlinLogging.logger {}
 
 val helpText = """
-Usage: 
+Usage:
 * `pm [1-5]`: Enable partymode for n hours
 * `pm disable`: Disable partymode
 """.trimIndent()
@@ -24,7 +24,7 @@ class PartyBot(private val storage: PartymodeStorage) {
             in Regex(".*pm [1-5]$") -> {
                 val regex = "[1-5]$".toRegex()
                 val numHours = regex.find(text)!!.value.toInt()
-                storage.enableForHours(numHours)
+                storage.enable(numHours)
                 val suffix = if (numHours > 1) "hours" else "hour"
                 "partymode enabled for $numHours $suffix"
             }

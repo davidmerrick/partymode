@@ -1,0 +1,39 @@
+{
+  "handler": {
+    "name": "enable"
+  },
+  "intent": {
+    "name": "actions.intent.MAIN",
+    "params": {},
+    "query": "Talk to party mode"
+  },
+  "scene": {
+    "name": "actions.scene.START_CONVERSATION",
+    "slotFillingStatus": "UNSPECIFIED",
+    "slots": {}
+  },
+  "session": {
+    "id": "ABwppHH-EcG7m3S1zpeZ_NM8rhpanhh5h_3EGFH73nu-WTO8_fv493R5BhUCzxy32WO4JIRG-poc",
+    "params": {},
+    "typeOverrides": [],
+    "languageCode": ""
+  },
+  "user": {
+    "locale": "en-US",
+    "params": {},
+    "accountLinkingStatus": "ACCOUNT_LINKING_STATUS_UNSPECIFIED",
+    "verificationStatus": "VERIFIED",
+    "packageEntitlements": [],
+    "lastSeenTime": "2020-11-02T19:35:24Z"
+  },
+  "home": {
+    "params": {}
+  },
+  "device": {
+    "capabilities": [
+      "SPEECH",
+      "RICH_RESPONSE",
+      "LONG_FORM_AUDIO"
+    ]
+  }
+}

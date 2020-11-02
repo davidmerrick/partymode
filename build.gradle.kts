@@ -7,10 +7,10 @@ repositories {
 
 plugins {
     id("com.github.johnrengelman.shadow") version "5.2.0"
-    kotlin("jvm") version "1.3.72"
-    kotlin("kapt") version "1.3.72"
-    kotlin("plugin.allopen") version "1.3.72"
-    application
+  kotlin("jvm") version "1.4.10"
+  kotlin("kapt") version "1.4.10"
+  kotlin("plugin.allopen") version "1.4.10"
+  application
 }
 
 application {
@@ -49,7 +49,6 @@ dependencies {
     implementation("com.google.cloud:google-cloud-firestore:1.34.0")
     implementation("com.twilio.sdk:twilio:7.39.0")
     implementation("software.amazon.awssdk:sns:$awsSdkVersion")
-
 
     // Test
 

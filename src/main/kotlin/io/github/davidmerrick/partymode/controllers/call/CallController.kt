@@ -15,27 +15,22 @@ import io.micronaut.http.server.util.HttpHostResolver
 import mu.KotlinLogging
 import org.apache.http.client.utils.URIBuilder
 import java.net.URI
-import javax.annotation.security.PermitAll
 
 private val log = KotlinLogging.logger {}
 
 @Controller("/call")
-@PermitAll
 class CallController(
-    private val logic: CallHandlerLogic,
-    private val requestValidator: PartymodeCallRequestValidator,
-    private val resolver: HttpHostResolver
+        private val logic: CallHandlerLogic,
+        private val requestValidator: PartymodeCallRequestValidator,
+        private val resolver: HttpHostResolver
 ) {
 
-    @Post(
-        consumes = [MediaType.APPLICATION_FORM_URLENCODED],
-        produces = [MediaType.APPLICATION_XML]
-    )
-    @PermitAll
+    @Post(consumes = [MediaType.APPLICATION_FORM_URLENCODED],
+            produces = [MediaType.APPLICATION_XML])
     fun handleCall(
-        @Header(TWILIO_SIGNATURE) twilioSignature: String,
-        @Context request: HttpRequest<String>,
-        @Body body: String
+            @Header(TWILIO_SIGNATURE) twilioSignature: String,
+            @Context request: HttpRequest<String>,
+            @Body body: String
     ): HttpResponse<String> {
         val requestUrl = resolveUri(request)
         val payload = TwilioCallPayload(body)
@@ -54,8 +49,8 @@ class CallController(
         // Cloud Run forwards https to http for the container. Swap out the scheme if this is the case
         if (request.headers.contains("x-forwarded-proto")) {
             return URIBuilder(URI.create(resolvedUrl))
-                .setScheme(request.headers["x-forwarded-proto"]!!)
-                .toString()
+                    .setScheme(request.headers["x-forwarded-proto"]!!)
+                    .toString()
         }
 
         return resolvedUrl

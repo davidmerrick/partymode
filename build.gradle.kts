@@ -7,10 +7,10 @@ repositories {
 
 plugins {
     id("com.github.johnrengelman.shadow") version "5.2.0"
-  kotlin("jvm") version "1.4.10"
-  kotlin("kapt") version "1.4.10"
-  kotlin("plugin.allopen") version "1.4.10"
-  application
+    kotlin("jvm") version "1.4.10"
+    kotlin("kapt") version "1.4.10"
+    kotlin("plugin.allopen") version "1.4.10"
+    application
 }
 
 application {
@@ -21,24 +21,28 @@ application {
 // annotations open
 allOpen {
     annotations(
-            "io.micronaut.aop.Around",
-            "io.micronaut.http.annotation.Controller",
-            "javax.inject.Singleton"
+        "io.micronaut.aop.Around",
+        "io.micronaut.http.annotation.Controller",
+        "javax.inject.Singleton"
     )
 }
 
 dependencies {
-    val micronautVersion by extra("1.3.4")
+    val micronautVersion by extra("2.1.2")
     val awsSdkVersion by extra("2.13.31")
 
     kapt(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     kapt("io.micronaut:micronaut-inject-java")
     kapt("io.micronaut:micronaut-validation")
+    kapt("io.micronaut.security:micronaut-security")
 
     implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     implementation("io.micronaut:micronaut-runtime")
     implementation("io.micronaut:micronaut-inject")
     implementation("io.micronaut:micronaut-validation")
+    implementation("io.micronaut.security:micronaut-security:$micronautVersion")
+    implementation("io.micronaut.security:micronaut-security-jwt:$micronautVersion")
+    implementation("io.micronaut.gcp:micronaut-gcp-tracing:3.2.1")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("io.github.microutils:kotlin-logging:1.7.2")
     implementation("org.slf4j:slf4j-simple:1.8.0-beta4")

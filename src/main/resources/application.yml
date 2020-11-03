@@ -27,7 +27,7 @@ endpoints:
 
 tracing:
   zipkin:
-    enabled: false
+    enabled: true
 
 jackson:
   mapper:

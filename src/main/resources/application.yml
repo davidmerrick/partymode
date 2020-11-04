@@ -1,6 +1,8 @@
 micronaut:
   application:
     name: partymode
+  security:
+    enabled: false
 
 partymode:
   botName: partybot
@@ -21,6 +23,10 @@ endpoints:
   all:
     enabled: false
   health:
+    enabled: true
+
+tracing:
+  zipkin:
     enabled: true
 
 jackson:

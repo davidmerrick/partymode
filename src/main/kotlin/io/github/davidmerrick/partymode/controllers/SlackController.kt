@@ -9,7 +9,9 @@ import io.micronaut.http.annotation.Post
 import javax.annotation.security.PermitAll
 
 @Controller("/slack")
-class SlackController(private val handler: SlackMessageHandler) {
+class SlackController(
+    private val handler: SlackMessageHandler
+) {
 
     @Post("/events",
         consumes = [MediaType.APPLICATION_JSON],

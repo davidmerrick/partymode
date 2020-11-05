@@ -17,8 +17,6 @@ application {
     mainClassName = "io.github.davidmerrick.partymode.Application"
 }
 
-// Compiler plugin which makes classes with the following
-// annotations open
 allOpen {
     annotations(
         "io.micronaut.aop.Around",
@@ -35,14 +33,11 @@ dependencies {
     kapt(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     kapt("io.micronaut:micronaut-inject-java")
     kapt("io.micronaut:micronaut-validation")
-    kapt("io.micronaut.security:micronaut-security")
 
     implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     implementation("io.micronaut:micronaut-runtime")
     implementation("io.micronaut:micronaut-inject")
     implementation("io.micronaut:micronaut-validation")
-    implementation("io.micronaut.security:micronaut-security:$micronautVersion")
-    implementation("io.micronaut.security:micronaut-security-jwt:$micronautVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("io.github.microutils:kotlin-logging:1.7.2")
     implementation("org.slf4j:slf4j-simple:1.8.0-beta4")

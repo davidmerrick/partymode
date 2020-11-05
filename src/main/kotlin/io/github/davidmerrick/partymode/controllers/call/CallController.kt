@@ -15,12 +15,10 @@ import io.micronaut.http.server.util.HttpHostResolver
 import mu.KotlinLogging
 import org.apache.http.client.utils.URIBuilder
 import java.net.URI
-import javax.annotation.security.PermitAll
 
 private val log = KotlinLogging.logger {}
 
 @Controller("/call")
-@PermitAll
 class CallController(
     private val logic: CallHandlerLogic,
     private val requestValidator: PartymodeCallRequestValidator,
@@ -31,7 +29,6 @@ class CallController(
         consumes = [MediaType.APPLICATION_FORM_URLENCODED],
         produces = [MediaType.APPLICATION_XML]
     )
-    @PermitAll
     fun handleCall(
         @Header(TWILIO_SIGNATURE) twilioSignature: String,
         @Context request: HttpRequest<String>,

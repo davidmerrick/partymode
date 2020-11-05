@@ -22,6 +22,14 @@ Technical details:
 * Get an AWS account. 
 * Get admin access to your Slack workspace.
 
+## Secret Manager Setup
+
+Add the following secrets to Secrets Manager:
+`TWILIO_AUTH_TOKEN`
+
+Next, grant "Secret Manager Secret Accessor" and "Secret Manager Secret Viewer" privileges to the 
+IAM compute account for your service.
+
 ## Slack setup
 
 - Create a Slack webhook and set the `SLACK_WEBHOOK_URI` env var to that uri.

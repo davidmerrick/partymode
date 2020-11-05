@@ -1,7 +1,7 @@
 package io.github.davidmerrick.partymode.external.twilio
 
 import com.twilio.security.RequestValidator
-import io.github.davidmerrick.partymode.config.PartymodeConfig.TwilioConfig
+import io.github.davidmerrick.partymode.config.TwilioConfig
 import javax.inject.Singleton
 
 /**

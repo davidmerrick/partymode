@@ -1,5 +1,6 @@
 package io.github.davidmerrick.partymode.config
 
+import io.github.davidmerrick.partymode.external.gcp.SecretsFetcher
 import io.micronaut.context.annotation.ConfigurationProperties
 import javax.validation.constraints.NotBlank
 
@@ -17,12 +18,6 @@ class PartymodeConfig {
         lateinit var collectionName: String
     }
 
-    @ConfigurationProperties("twilio")
-    class TwilioConfig {
-        @get:NotBlank
-        lateinit var authToken: String
-    }
-
     @ConfigurationProperties("phone")
     class PhoneConfig {
         @get:NotBlank
@@ -33,8 +28,8 @@ class PartymodeConfig {
     }
 
     @ConfigurationProperties("sns")
-    class SnsConfig {
-        var topicArn: String? = null
+    class SnsConfig(private val secretsFetcher: SecretsFetcher) {
+        val topicArn by lazy { secretsFetcher.getSecret("SNS_TOPIC_ARN") }
         var enabled: Boolean = false
 
         @get:NotBlank

@@ -30,7 +30,7 @@ allOpen {
 dependencies {
     val micronautVersion by extra("2.1.2")
     val awsSdkVersion by extra("2.13.31")
-  val googleSdkVersion by extra("2.1.0")
+    val googleSdkVersion by extra("2.1.0")
 
     kapt(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     kapt("io.micronaut:micronaut-inject-java")
@@ -43,16 +43,16 @@ dependencies {
     implementation("io.micronaut:micronaut-validation")
     implementation("io.micronaut.security:micronaut-security:$micronautVersion")
     implementation("io.micronaut.security:micronaut-security-jwt:$micronautVersion")
-    implementation("io.micronaut.gcp:micronaut-gcp-tracing:3.2.1")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("io.github.microutils:kotlin-logging:1.7.2")
     implementation("org.slf4j:slf4j-simple:1.8.0-beta4")
     implementation("io.micronaut:micronaut-http-server-netty")
     implementation("io.github.davidmerrick.slakson:slakson:2.0.2")
     implementation("io.micronaut:micronaut-management")
-  implementation("io.micronaut:micronaut-http-client")
-  implementation("com.google.cloud:google-cloud-firestore:$googleSdkVersion")
-  implementation("com.twilio.sdk:twilio:7.39.0")
+    implementation("io.micronaut:micronaut-http-client")
+    implementation("com.google.cloud:google-cloud-firestore:$googleSdkVersion")
+    implementation("com.google.cloud:google-cloud-secretmanager:1.2.3")
+    implementation("com.twilio.sdk:twilio:7.39.0")
     implementation("software.amazon.awssdk:sns:$awsSdkVersion")
 
     // Test

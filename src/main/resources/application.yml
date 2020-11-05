@@ -12,22 +12,15 @@ partymode:
   sns:
     region: us-west-2
     enabled: false
-    topicArn:
   phone:
     myNumber:
     callboxNumber:
-  twilio:
-    authToken:
 
 endpoints:
   all:
     enabled: false
   health:
     enabled: true
-
-tracing:
-  zipkin:
-    enabled: false
 
 jackson:
   mapper:
@@ -43,3 +36,6 @@ slack:
 logger:
   levels:
     io.github.davidmerrick.partymode: DEBUG
+
+gcp:
+  projectId:

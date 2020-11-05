@@ -5,7 +5,7 @@ import io.github.davidmerrick.partymode.config.PartymodeConfig
 import io.github.davidmerrick.partymode.external.twilio.TwilioCallPayload
 import io.github.davidmerrick.partymode.external.twilio.TwilioFields.FROM
 import io.kotlintest.shouldBe
-import io.micronaut.test.annotation.MicronautTest
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.Test
 import javax.inject.Inject
 

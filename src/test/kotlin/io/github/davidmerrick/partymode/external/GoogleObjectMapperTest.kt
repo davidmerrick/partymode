@@ -5,7 +5,7 @@ import io.github.davidmerrick.partymode.TestApplication
 import io.github.davidmerrick.partymode.external.google.GoogleEvent
 import io.github.davidmerrick.partymode.external.google.GoogleObjectMapper
 import io.kotlintest.shouldBe
-import io.micronaut.test.annotation.MicronautTest
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.Test
 import java.io.File
 import javax.inject.Inject

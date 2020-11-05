@@ -14,8 +14,9 @@ partymode:
   phone:
     myNumber: +11234567890
     callboxNumber: +11234569999
-  twilio:
-    authToken: 12345
+
+gcp:
+  projectId: 123456789
 
 endpoints:
   all:

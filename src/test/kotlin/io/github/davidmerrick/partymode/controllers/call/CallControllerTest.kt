@@ -2,6 +2,7 @@ package io.github.davidmerrick.partymode.controllers.call
 
 import io.github.davidmerrick.partymode.TestApplication
 import io.github.davidmerrick.partymode.config.PartymodeConfig.PhoneConfig
+import io.github.davidmerrick.partymode.config.TwilioConfig
 import io.github.davidmerrick.partymode.external.twilio.PartymodeCallRequestValidator
 import io.github.davidmerrick.partymode.external.twilio.TwilioHeaders.TWILIO_SIGNATURE
 import io.github.davidmerrick.partymode.storage.PartymodeStorage
@@ -13,8 +14,8 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.test.annotation.MicronautTest
 import io.micronaut.test.annotation.MockBean
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
@@ -25,6 +26,12 @@ private const val CALL_ENDPOINT = "/call"
 
 @MicronautTest(application = TestApplication::class)
 class CallControllerTest {
+    @get:MockBean(TwilioConfig::class)
+    val twilioConfig = mockk<TwilioConfig>()
+
+    init {
+        every { twilioConfig.authToken } returns "foo"
+    }
 
     @get:MockBean(PartymodeStorage::class)
     val storage = mockk<PartymodeStorage>()

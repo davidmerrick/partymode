@@ -1,6 +1,7 @@
 package io.github.davidmerrick.partymode.controllers
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import io.github.davidmerrick.partymode.external.google.GoogleAssistantTokenValidator
 import io.github.davidmerrick.partymode.external.google.GoogleEvent
 import io.github.davidmerrick.partymode.external.google.GoogleEventHandler
 import io.github.davidmerrick.partymode.external.google.GoogleObjectMapper
@@ -19,7 +20,8 @@ private const val GOOGLE_ASSISTANT_SIGNATURE = "google-assistant-signature"
 @Controller("/google")
 class GoogleAssistantController(
     private val handler: GoogleEventHandler,
-    private val mapper: GoogleObjectMapper
+    private val mapper: GoogleObjectMapper,
+    private val tokenValidator: GoogleAssistantTokenValidator
 ) {
     @Post("/events",
         consumes = [MediaType.APPLICATION_JSON],
@@ -29,9 +31,9 @@ class GoogleAssistantController(
         @Header(GOOGLE_ASSISTANT_SIGNATURE) authHeader: String?,
         @Body eventString: String
     ): HttpResponse<String> {
-        // Todo: Add validation here
-        log.info(authHeader)
-        authHeader ?: return HttpResponse.unauthorized()
+        if (authHeader == null || !tokenValidator.validate(authHeader)) {
+            return HttpResponse.unauthorized()
+        }
 
         val event = mapper.readValue<GoogleEvent>(eventString)
         return HttpResponse.ok(handler.handle(event) ?: "")

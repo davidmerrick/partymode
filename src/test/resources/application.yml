@@ -15,6 +15,9 @@ partymode:
     myNumber: +11234567890
     callboxNumber: +11234569999
 
+googleAssistant:
+  appName: partymode
+
 gcp:
   projectId: 123456789
 

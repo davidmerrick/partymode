@@ -49,6 +49,8 @@ dependencies {
     implementation("com.google.cloud:google-cloud-secretmanager:1.2.3")
     implementation("com.twilio.sdk:twilio:7.39.0")
     implementation("software.amazon.awssdk:sns:$awsSdkVersion")
+    implementation("com.google.auth:google-auth-library-oauth2-http:0.22.0")
+
 
     // Test
 

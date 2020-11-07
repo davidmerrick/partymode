@@ -16,6 +16,9 @@ partymode:
     myNumber:
     callboxNumber:
 
+googleAssistant:
+  appName: partymode
+
 endpoints:
   all:
     enabled: false

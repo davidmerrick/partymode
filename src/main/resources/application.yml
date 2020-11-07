@@ -9,12 +9,13 @@ partymode:
   firestore:
     projectId:
     collectionName: party-leases
-  sns:
-    region: us-west-2
-    enabled: false
   phone:
     myNumber:
     callboxNumber:
+
+sns:
+  region: us-west-2
+  enabled: false
 
 googleAssistant:
   appName: partymode

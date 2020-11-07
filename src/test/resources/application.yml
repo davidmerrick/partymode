@@ -7,16 +7,16 @@ partymode:
   firestore:
     projectId: banana
     collectionName: party-leases
-  sns:
-    region: us-west-2
-    enabled: false
-    topicArn:
   phone:
     myNumber: +11234567890
     callboxNumber: +11234569999
 
 googleAssistant:
   appName: partymode
+
+sns:
+  region: us-west-2
+  enabled: false
 
 gcp:
   projectId: 123456789

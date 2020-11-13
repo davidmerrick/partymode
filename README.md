@@ -1,12 +1,13 @@
 # partymode 🎉
 
 Buzzing people into your apartment building when you're having a party<sup>*</sup>? 
+
 Ain't nobody got time for that! That's why I built partymode. 
 It's a service that:
 - Auto-buzzes people into my building when enabled.
 - Otherwise forwards calls to my phone. 
 
-<sup>Or, during COVID, getting your food delivered</sup>
+<sup>*</sup> Or, during COVID, getting your food delivered
 
 It uses [Twilio](https://www.twilio.com/) to handle calls and SMS. 
 It integrates with Slack so I or anyone in my workspace can enable it.

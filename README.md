@@ -1,21 +1,19 @@
 # partymode 🎉
 
-Buzzing people into your apartment building when you're having a party<sup>*</sup>? 
+Buzzing people into your apartment building when you're having a party (Or, during COVID, getting your food delivered)? 
 
 Ain't nobody got time for that! That's why I built partymode. 
 It's a service that:
 - Auto-buzzes people into my building when enabled.
 - Otherwise forwards calls to my phone. 
 
-<sup>*</sup> Or, during COVID, getting your food delivered
-
 It uses [Twilio](https://www.twilio.com/) to handle calls and SMS. 
 It integrates with Slack so I or anyone in my workspace can enable it.
 
 Technical details:
-- Written in Kotlin with the Micronaut framework
-- Has an SNS integration that downstream consumers can connect to (I use this for a Slack webhook/Alexa alert)
-- Has a Google Assistant endpoint so you can be extra-lazy and just say "Hey Google, open partymode" to enable it for 3 hours
+- Written in Kotlin with the Micronaut framework.
+- Has an SNS integration that downstream consumers can connect to (I use this for a Slack webhook/Alexa alert).
+- Has a Google Assistant endpoint so you can be extra-lazy and just say "Hey Google, open partymode" to enable it for 3 hours.
 
 # Installation
 

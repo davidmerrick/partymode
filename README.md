@@ -12,7 +12,7 @@ It integrates with Slack so I or anyone in my workspace can enable it.
 Technical details:
 - Written in Kotlin with the Micronaut framework
 - Has an SNS integration that downstream consumers can connect to (I use this for a Slack webhook/Alexa alert)
-- Eventually, SNS integration will be migrated to Google Cloud's PubSub
+- Has a Google Assistant endpoint so you can be extra-lazy and just say "Hey Google, open partymode" to enable it for 3 hours
 
 # Installation
 

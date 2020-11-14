@@ -47,7 +47,7 @@ dependencies {
     implementation("io.micronaut:micronaut-http-client")
     implementation("com.google.cloud:google-cloud-firestore:$googleSdkVersion")
     implementation("com.google.cloud:google-cloud-secretmanager:1.2.3")
-    implementation("com.twilio.sdk:twilio:7.39.0")
+    implementation("com.twilio.sdk:twilio:8.2.0")
     implementation("software.amazon.awssdk:sns:$awsSdkVersion")
     implementation("com.google.auth:google-auth-library-oauth2-http:0.22.0")
 

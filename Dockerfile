@@ -1,4 +1,4 @@
-FROM gradle:6.5-jdk11 AS builder
+FROM gradle:6.7-jdk11 AS builder
 COPY --chown=gradle:gradle . /home/application
 WORKDIR /home/application
 

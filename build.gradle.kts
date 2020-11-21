@@ -26,7 +26,7 @@ allOpen {
 }
 
 dependencies {
-    val micronautVersion by extra("2.1.2")
+    val micronautVersion by extra("2.2.0")
     val awsSdkVersion by extra("2.13.31")
     val googleSdkVersion by extra("2.1.0")
 
